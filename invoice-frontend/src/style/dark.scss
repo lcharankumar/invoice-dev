@@ -1,0 +1,550 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap");
+
+$font-family: "Inter", sans-serif;
+$bg-color: #252954;
+$body-color: #9b9ca7;
+$main-bg: #0e0e23;
+:root {
+  --delay: 0s;
+}
+@media only screen and (min-width: 500px) {
+  .app-header-actions-buttons {
+    margin-right: 120px;
+  }
+}
+.Pen {
+  border: none;
+  background: none;
+}
+.ModalBody-dark {
+  .invoice-wrapper {
+    background-color: #1b1b1b;
+    /* background-color: inherit; */
+    box-shadow: 9px 9px 15px rgba(109, 109, 109, 0.15),
+      -9px -9px 16px rgba(0, 0, 0, 0.95);
+    border-radius: 5px;
+  }
+  .feilds {
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    box-shadow: 3px 3px 5px rgba(255, 255, 255, 0.15),
+      -3px -3px 5px rgba(0, 0, 0, 0.95);
+    padding: 12px 25px;
+    outline: none;
+    transition: box-shadow 0.3s;
+
+    &:hover {
+      box-shadow: 3px 3px 5px rgba(92, 92, 92, 0.15),
+        -3px -3px 5px rgba(0, 0, 0, 0.95);
+    }
+  }
+}
+.ModalBody-light {
+  .invoice-wrapper {
+    background-color: #fbfbfb;
+    /* background-color: inherit; */
+    box-shadow: 9px 9px 16px rgb(0 0 0 / 15%),
+      -9px -9px 16px rgb(255 255 255 / 95%);
+    border-radius: 5px;
+  }
+  .feilds {
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    box-shadow: 7px 7px 14px rgba(0, 0, 0, 0.15), -7px -7px 14px #fbfbfb;
+    padding: 12px 25px;
+    outline: none;
+    transition: box-shadow 0.3s;
+
+    &:hover {
+      box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.15), -3px -3px 5px #fbfbfb;
+    }
+  }
+}
+#dropdown-basic {
+  border-color: none !important;
+  background: transparent !important;
+  border: none;
+  box-shadow: none !important;
+}
+option {
+  color: black;
+}
+.app-dark {
+  .Adpage {
+    .list-view {
+      background-color: #3b4467;
+    }
+    .list-view header {
+      background: #3d476c;
+    }
+    .card1 {
+      color: white !important;
+    }
+    h1,
+    h2 {
+      color: white;
+    }
+    .Adpage .list-view header {
+      background: #3c466a !important;
+    }
+  }
+  .Page3 {
+    .invoice-wrapper {
+      background-color: #1b1b1b;
+      /* background-color: inherit; */
+      box-shadow: 9px 9px 15px rgba(109, 109, 109, 0.15),
+        -9px -9px 16px rgba(0, 0, 0, 0.95);
+      border-radius: 5px;
+    }
+    .feilds {
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      box-shadow: 3px 3px 5px rgba(255, 255, 255, 0.15),
+        -3px -3px 5px rgba(0, 0, 0, 0.95);
+      padding: 12px 25px;
+      outline: none;
+      transition: box-shadow 0.3s;
+
+      &:hover {
+        box-shadow: 3px 3px 5px rgba(92, 92, 92, 0.15),
+          -3px -3px 5px rgba(0, 0, 0, 0.95);
+      }
+    }
+  }
+  .Pen {
+    color: white;
+  }
+  .card-title {
+    color: white;
+  }
+
+  input {
+    background: none;
+    color: white !important;
+  }
+  color: white;
+  .navbar_custom {
+    background-color: black !important;
+    color: white;
+    .page_title_1 {
+      color: white;
+    }
+    .page_title_2 {
+      color: #f87115;
+    }
+    .icon-button {
+      color: white;
+      &:hover,
+      &:focus {
+        box-shadow: 0 0 0 4px #1f1f1f, 0 0 0 5px #969593;
+      }
+    }
+  }
+  .tittle {
+    span {
+      color: rgb(31, 31, 216);
+    }
+  }
+  @mixin transition {
+    transition-property: background-color opacity;
+    transition-duration: 0.2s;
+    transition-timing-function: ease-in-out;
+  }
+  .multi_step_form {
+    .LangSelect {
+      input,
+      select {
+        @include transition;
+        cursor: pointer;
+        background-color: rgba(255, 255, 255, 0.5);
+        height: 45px;
+        width: 150px;
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        color: rgb(0, 0, 0);
+        display: inline-block;
+        font-size: 15px;
+        text-align: center;
+        text-decoration: none;
+        appearance: none;
+        &:hover {
+          background-color: rgba(255, 255, 255, 0.7);
+        }
+        &:active {
+          background-color: rgb(255, 255, 255);
+        }
+        &:focus {
+          outline: none;
+        }
+      }
+
+      .custom-select {
+        display: inline-block;
+        select {
+          margin-bottom: 30px;
+          -webkit-appearance: none;
+          -moz-appearance: none;
+          appearance: none;
+          background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAh0lEQVQ4T93TMQrCUAzG8V9x8QziiYSuXdzFC7h4AcELOPQAdXYovZCHEATlgQV5GFTe1ozJlz/kS1IpjKqw3wQBVyy++JI0y1GTe7DCBbMAckeNIQKk/BanALBB+16LtnDELoMcsM/BESDlz2heDR3WePwKSLo5eoxz3z6NNcFD+vu3ij14Aqz/DxGbKB7CAAAAAElFTkSuQmCC");
+          background-repeat: no-repeat;
+          background-position: 125px center;
+        }
+      }
+    }
+    #msform #progressbar li.active {
+      color: #f87115;
+    }
+    #msform #progressbar li.active:after,
+    li.active::before {
+      background: #f87115 !important;
+    }
+    background: rgb(26, 32, 73);
+    background: radial-gradient(
+      circle,
+      rgba(26, 32, 73, 1) 0%,
+      rgba(19, 22, 47, 1) 100%
+    );
+
+    #msform {
+      background-color: black;
+      .uploader {
+        .lead {
+          color: white;
+        }
+        label {
+          color: white;
+          background: #101010;
+        }
+      }
+    }
+  }
+  .Body2 {
+    .button {
+      background: #1a1b3c;
+    }
+    background-color: $bg-color;
+    color: $body-color;
+    .left-side {
+      background: none;
+    }
+    .wrapper {
+      .point {
+        color: white;
+      }
+      .table {
+        color: white;
+      }
+      background-color: $main-bg;
+      .card {
+        background: rgb(26, 32, 73);
+        background: radial-gradient(
+          circle,
+          rgba(26, 32, 73, 1) 0%,
+          rgba(19, 22, 47, 1) 100%
+        );
+      }
+      .cards-header {
+        background: #10122b;
+      }
+    }
+    .card1 {
+      background: rgb(26, 29, 58);
+      background: linear-gradient(
+        45deg,
+        rgba(26, 29, 58, 1) 0%,
+        rgba(33, 39, 82, 1) 100%
+      );
+    }
+    .header {
+      background: radial-gradient(
+        circle,
+        rgba(20, 24, 52, 1) 0%,
+        rgba(19, 22, 47, 1) 100%
+      );
+      &:before {
+        background-color: $main-bg;
+      }
+    }
+  }
+  .Admin {
+    .button {
+      background: #1a1b3c;
+    }
+    background-color: $bg-color;
+    color: $body-color;
+    .left-side {
+      background: none;
+    }
+    .wrapper {
+      .point {
+        color: white;
+      }
+      .table {
+        color: white;
+      }
+      background-color: $main-bg;
+      .card {
+        background: rgb(26, 32, 73);
+        background: radial-gradient(
+          circle,
+          rgba(26, 32, 73, 1) 0%,
+          rgba(19, 22, 47, 1) 100%
+        );
+      }
+      .cards-header {
+        background: #10122b;
+      }
+    }
+    .card1 {
+      background: rgb(26, 29, 58);
+      background: linear-gradient(
+        45deg,
+        rgba(26, 29, 58, 1) 0%,
+        rgba(33, 39, 82, 1) 100%
+      );
+    }
+    .header {
+      background: radial-gradient(
+        circle,
+        rgba(20, 24, 52, 1) 0%,
+        rgba(19, 22, 47, 1) 100%
+      );
+      &:before {
+        background-color: $main-bg;
+      }
+    }
+  }
+}
+.app-light {
+  .Adpage {
+    background-color: #ffff;
+    .screen {
+      box-shadow: 0 0 10px rgb(0 0 0 / 30%) !important;
+    }
+    .menu-view {
+      .menu-item.active {
+        background-color: #dad6d6 !important;
+      }
+      .menu-item {
+        &:hover {
+          background-color: rgb(189, 187, 187) !important;
+        }
+      }
+      background-color: #ffff;
+    }
+    .menu-view .menu-item {
+      color: black;
+    }
+    .menu-item > *:not(.badge) {
+      opacity: 1 !important;
+    }
+    .menu-item > * {
+      text-shadow: none !important;
+      font-weight: bold;
+    }
+  }
+
+  .Page3 {
+    .invoice-wrapper {
+      background-color: #fbfbfb;
+      /* background-color: inherit; */
+      box-shadow: 9px 9px 16px rgb(0 0 0 / 15%),
+        -9px -9px 16px rgb(255 255 255 / 95%);
+      border-radius: 5px;
+    }
+    .feilds {
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      box-shadow: 7px 7px 14px rgba(0, 0, 0, 0.15), -7px -7px 14px #fbfbfb;
+      padding: 12px 25px;
+      outline: none;
+      transition: box-shadow 0.3s;
+
+      &:hover {
+        box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.15), -3px -3px 5px #fbfbfb;
+      }
+    }
+  }
+  .Body2 {
+    .button {
+      background: #f87115;
+    }
+  }
+  input {
+    background: none;
+    color: black;
+  }
+  color: black;
+  .navbar_custom {
+    background-color: white !important;
+    .page_title_1 {
+      color: black;
+    }
+    .page_title_2 {
+      color: red;
+    }
+    .icon-button {
+      color: black;
+      &:hover,
+      &:focus {
+        box-shadow: 0 0 0 4px #e9ecef, 0 0 0 5px #969593;
+      }
+    }
+  }
+  @mixin transition {
+    transition-property: background-color opacity;
+    transition-duration: 0.2s;
+    transition-timing-function: ease-in-out;
+  }
+  .multi_step_form {
+    .LangSelect {
+      input,
+      select {
+        @include transition;
+        cursor: pointer;
+        background-color: rgba(0, 0, 0, 0.3);
+        height: 45px;
+        width: 150px;
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        color: white;
+        display: inline-block;
+        font-size: 15px;
+        text-align: center;
+        text-decoration: none;
+        appearance: none;
+        &:hover {
+          background-color: rgba(0, 0, 0, 0.7);
+        }
+        &:active {
+          background-color: black;
+        }
+        &:focus {
+          outline: none;
+        }
+      }
+
+      .custom-select {
+        display: inline-block;
+        select {
+          margin-bottom: 30px;
+          -webkit-appearance: none;
+          -moz-appearance: none;
+          appearance: none;
+          background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAh0lEQVQ4T93TMQrCUAzG8V9x8QziiYSuXdzFC7h4AcELOPQAdXYovZCHEATlgQV5GFTe1ozJlz/kS1IpjKqw3wQBVyy++JI0y1GTe7DCBbMAckeNIQKk/BanALBB+16LtnDELoMcsM/BESDlz2heDR3WePwKSLo5eoxz3z6NNcFD+vu3ij14Aqz/DxGbKB7CAAAAAElFTkSuQmCC");
+          background-repeat: no-repeat;
+          background-position: 125px center;
+        }
+      }
+    }
+    #msform #progressbar li.active {
+      color: red;
+    }
+    #msform #progressbar li.active:after,
+    li.active::before {
+      background: green !important;
+    }
+  }
+  .Body2 {
+    background: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: black;
+    .left-side {
+      background: rgb(255 255 255);
+    }
+
+    .wrapper {
+      .point {
+        color: black;
+      }
+
+      background: white;
+
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+
+      .card {
+        background: white;
+      }
+      .card1 {
+        box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.75);
+      }
+      .cards-header {
+        background: white;
+      }
+      .table {
+        color: black;
+      }
+      .destination-card {
+        background: white;
+        color: black;
+        box-shadow: 2px 2px 4px 4px #adb5bd;
+      }
+      .header {
+        background: white;
+        border-top-right-radius: 0px;
+        border-top-left-radius: 0px;
+        &:before {
+          background: white;
+        }
+      }
+    }
+  }
+  .Admin {
+    background: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: black;
+    .left-side {
+      background: rgb(255 255 255);
+    }
+
+    .wrapper {
+      .point {
+        color: black;
+      }
+
+      background: white;
+
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+
+      .card {
+        background: white;
+      }
+      .card1 {
+        box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.75);
+      }
+      .cards-header {
+        background: white;
+      }
+      .table {
+        color: black;
+      }
+      .destination-card {
+        background: white;
+        color: black;
+        box-shadow: 2px 2px 4px 4px #adb5bd;
+      }
+      .header {
+        background: white;
+        border-top-right-radius: 0px;
+        border-top-left-radius: 0px;
+        &:before {
+          background: white;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,157 @@
+=trbl($top: auto, $right: auto, $bottom: auto, $left: auto)
+    top: $top
+    right: $right
+    bottom: $bottom
+    left: $left
+
+$ratio: 16/9
+$screen-width: 280px
+$screen-height: $screen-width * $ratio
+$menu-item-height: $screen-height / 6.5
+$header-height: 50px
+$list-item-height: 86px
+$thumbnail-height: 44px
+
+$primary: #FD7F72
+$secondary: #3E486D
+$secondary-dark: #2d3352
+$secondary-darker: #313857
+$not-really-black: #555
+
+.Adpage
+
+    background-color: $secondary-dark
+    font-family: 'Quicksand'
+    color: $not-really-black
+    font-size: 11px
+    h1,
+    h2
+        font-weight: 700
+
+    .uppercase
+        text-transform: uppercase
+        letter-spacing: 0.05rem
+
+    .icon
+        cursor: pointer
+
+    #AdminPage
+        min-height: 100%
+        margin-left: -150px
+        padding: 20px 0
+        box-sizing: border-box
+        display: flex
+        align-items: center
+        justify-content: center
+
+    .screen
+        width: $screen-width
+        box-shadow: 0 0 80px rgba(black, 0.3)
+
+    .menu-view
+        background-color: $secondary
+        position: relative
+        transform: scale(0.9)
+        transform-origin: 150% 50%
+
+        .menu-item
+            height: $menu-item-height
+            line-height: $menu-item-height
+            color: white
+            border-left: 2px solid transparent
+            cursor: pointer
+
+            & > *
+                text-shadow: 0 0 3px rgba(black, 0.5)
+
+                &:not(.badge)
+                    opacity: 0.5
+
+            .icon
+                margin: 2px 1.5rem auto 1.5rem
+
+            .badge
+                background-color: $primary
+                padding: 5px 11px
+                margin-left: 2rem
+                border-radius: 999px
+
+            &:hover
+                background-color: darken($secondary, 4%)
+
+            &.active
+                background-color: $secondary-darker
+                border-color: $primary
+
+                .text
+                    opacity: 1
+
+    .list-view
+        background-color: white
+        position: relative
+
+        header
+            height: $header-height
+            display: flex
+            align-items: center
+            justify-content: space between
+            border-bottom: 1px solid rgba(black, 0.1)
+
+            .icon
+                padding: 1.5rem
+
+            h1
+                flex-grow: 1
+                text-align: center
+
+        .list-item
+            background-color: $primary
+            color: white
+            position: relative
+
+            .regrade
+                +trbl(0, 0, 0, 0)
+                position: absolute
+                line-height: $list-item-height
+                padding-left: 1.5rem
+                cursor: pointer
+
+            .card1
+                height: $list-item-height
+                position: relative
+                background-color: white
+                color: $not-really-black
+                display: flex
+                align-items: center
+                border-bottom: 1px solid rgba(black, 0.1)
+                cursor: pointer
+                transition: box-shadow 0.5s ease, transform 0.5s ease, transform-origin 0.5s ease, z-index 0.5s ease
+
+                .thumbnail
+                    flex: 0 0 #{$thumbnail-height}
+                    margin: 0 16px
+
+                    img
+                        width: 100%
+                        border-radius: 999px
+
+                .details
+                    height: $thumbnail-height
+                    display: flex
+                    flex-direction: column
+                    justify-content: space-between
+
+                    .name
+                        font-size: 12px
+
+                    & > *:not(.name)
+                        opacity: 0.6
+
+                &:hover
+                    background-color: darken(white, 5%)
+
+                &.active
+                    z-index: 3
+                    transform: scale(1.2)
+                    transform-origin: -180% 50%
+                    box-shadow: 0 0 16px rgba(black, 0.3)

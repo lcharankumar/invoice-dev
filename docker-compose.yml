@@ -1,0 +1,47 @@
+version: "3.9"
+services:
+  mongo: # This the db where all the data is stored.
+    image: mongo:5
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: digiverz
+      MONGO_INITDB_ROOT_PASSWORD: digiverz
+    ports:
+      - 27017:27017
+    volumes:
+      - ~/mongo/data:/data/db
+    logging:
+        driver: none
+
+  mongo-express:  # This service is a dashboard to get the mongo db information
+    image: mongo-express:0.54
+    restart: always
+    ports:
+      - 8088:8088
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: digiverz
+      ME_CONFIG_MONGODB_ADMINPASSWORD: digiverz
+      ME_CONFIG_MONGODB_URL: mongodb+srv://digiverz:digiverz@cluster0.ngqcelw.mongodb.net/?retryWrites=true&w=majority
+    depends_on:
+      - mongo
+    logging:
+        driver: none
+  server:
+    build:  ./backend
+    command: uvicorn app:app --root-path / --proxy-headers --host 0.0.0.0 --port 5000
+    ports: 
+    - "5000:5000"
+    volumes: 
+    - ./backend:/app
+    environment: 
+      FLASK_ENV: development
+    depends_on:
+      - mongo
+  web:
+    build: ./invoice-frontend
+    ports: 
+      - "3000:3000"
+    # volumes: 
+    #   - ./invoice-frontend:/user/src/app
+    depends_on: 
+      - server
