@@ -227,7 +227,7 @@ def data3(uid:str = Form()):
     uid = uid
     print(uid)
     for x in collection1.find({"$and": [{"uid": {"$eq": uid}}]},
-                                {"_id": 0, "id": 1, "name": 1, "uid": 1, "role": 1, "status": 1, "data": 1}):
+                                {"_id": 0, "id": 1, "name": 1, "uid": 1, "role": 1, "status": 1,"submitted": 1, "data": 1,"l1":1,"l2":1,"l3":1,"dept":1}):
         lst.append(x)
     return lst
 
