@@ -7,10 +7,9 @@ import ReactCrop, {
 } from "react-image-crop";
 
 import "react-image-crop/dist/ReactCrop.css";
-import img1 from "../img/img1.jpg";
+import img1 from "../../img/img1.jpg";
 import { Link } from "react-router-dom";
 function ImageCropper(props) {
-  console.log("img comp", props);
   const myRef = React.createRef();
   const onImageCropped = (croppedImage) => setCroppedImage(croppedImage);
   const [imageToCrop, setImageToCrop] = useState(props.img);
@@ -35,7 +34,6 @@ function ImageCropper(props) {
   const [imageRef, setImageRef] = useState(myRef);
 
   async function cropImage(crop) {
-    console.log(myRef.current);
     setCurrh(myRef.current.clientHeight);
     setCurrw(myRef.current.clientWidth);
     if (imageRef && crop.width && crop.height) {
@@ -53,7 +51,6 @@ function ImageCropper(props) {
   }
 
   function getCroppedImage(sourceImage, cropConfig, fileName) {
-    console.log("HIII");
     // creating the cropped image from the source image
     const canvas = document.createElement("canvas");
     const scaleX = sourceImage.naturalWidth / sourceImage.width;
@@ -62,12 +59,12 @@ function ImageCropper(props) {
     canvas.height = cropConfig.height * scaleY * pixelRatio;
     const ctx = canvas.getContext("2d");
 
-    console.log(
-      cropConfig.x,
-      cropConfig.y,
-      cropConfig.width,
-      cropConfig.height
-    );
+    // console.log(
+    //   cropConfig.x,
+    //   cropConfig.y,
+    //   cropConfig.width,
+    //   cropConfig.height
+    // );
     let temp = {
       x: cropConfig.x,
       y: cropConfig.y,
@@ -75,7 +72,6 @@ function ImageCropper(props) {
       h: cropConfig.height,
     };
     props.setCoordinates(temp);
-    console.log(temp);
 
     ctx.imageSmoothingQuality = "high";
 
@@ -118,7 +114,6 @@ function ImageCropper(props) {
           ruleOfThirds
           onImageLoaded={(imageRef) => {
             setImageRef(myRef);
-            console.log(imageRef);
           }}
           onComplete={(cropConfig) => {
             cropImage(cropConfig);

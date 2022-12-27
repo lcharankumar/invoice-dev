@@ -1,46 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import img from "../img/img2.png";
+import img from "../../img/img2.png";
 import axios, * as others from "axios";
-import "../style/page3.scss";
-import { DarkModeContext } from "../context/darkModeContext";
+import "../../style/page3.scss";
+import { DarkModeContext } from "../../context/darkModeContext";
 import { useContext } from "react";
-import { ArabicContext } from "../context/arabicContext";
-
-const Page3Component = (props) => {
+import { ArabicContext } from "../../context/arabicContext";
+import "../../style/dark.scss";
+const AccempComponent = (props) => {
   const { darkMode } = useContext(DarkModeContext);
   const { dispatch } = useContext(DarkModeContext);
   const { arabic } = useContext(ArabicContext);
   const { dispatch1 } = useContext(ArabicContext);
-  const navigate = useNavigate();
-  const [dailyCurr, setDailyCurr] = useState({
-    rates: {
-      EUR: 92,
-      INR: 82,
-      SAR: 3,
-    },
-  });
-  var today = new Date();
-  var dd = String(today.getDate()).padStart(2, "0");
-  var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
-  var yyyy = today.getFullYear();
-
-  const config = {
-    headers: {
-      "Content-Type": "application/json",
-    },
-  };
-  const fromInr = (amount) => {
-    return parseFloat(amount) / dailyCurr.rates.INR;
-  };
-  const fromEuro = (amount) => {
-    return parseFloat(amount) / dailyCurr.rates.EUR;
-  };
-  const fromSar = (amount) => {
-    return parseFloat(amount) / dailyCurr.rates.SAR;
-  };
-
-  today = mm + "/" + dd + "/" + yyyy;
   const [data, setData] = useState({
     company_name: "",
     from_address: "",
@@ -71,148 +42,26 @@ const Page3Component = (props) => {
     if (props.finalData) {
       setData(props.finalData);
     }
-    console.log(props.finalData);
   }, [props.finalData]);
-  const fetch = async () => {
-    try {
-      //  const formData1 = new FormData();
-      //  formData1.append("name", "admin");
-      //  formData1.append("uid", "admin001");
-      //  formData1.append("role", "admin");
-      //  formData1.append("password", "admin001");
-
-      const formData1 = new FormData();
-      let tot, sub_t, unit_p, pri;
-      if (data.currency == "$") {
-        tot = data.total;
-        sub_t = data.sub_total;
-        unit_p = data.bill_of_materials[0].unit_price;
-        pri = data.bill_of_materials[0].price;
-      }
-      if (data.currency == "€") {
-        tot = fromEuro(data.total);
-        sub_t = fromEuro(data.sub_total);
-        unit_p = data.bill_of_materials[0].unit_price.map((it) => {
-          return fromEuro(it);
-        });
-        pri = data.bill_of_materials[0].price.map((it) => {
-          return fromEuro(it);
-        });
-      }
-      if (data.currency == "₹") {
-        tot = fromInr(data.total);
-        sub_t = fromInr(data.sub_total);
-        unit_p = data.bill_of_materials[0].unit_price.map((it) => {
-          return fromInr(it);
-        });
-        pri = data.bill_of_materials[0].price.map((it) => {
-          return fromInr(it);
-        });
-      }
-      if (data.currency == "﷼") {
-        tot = fromSar(data.total);
-        sub_t = fromSar(data.sub_total);
-        unit_p = data.bill_of_materials[0].unit_price.map((it) => {
-          return fromSar(it);
-        });
-        pri = data.bill_of_materials[0].price.map((it) => {
-          return fromSar(it);
-        });
-      }
-      const data1 = {
-        company_name: data.company_name,
-        from_address: data.from_address,
-        to_address: data.to_address,
-        invoice_date: data.invoice_date,
-        due_date: data.due_date,
-        phone_number: data.phone_number,
-        invoice_number: data.invoice_number,
-        currency: data.currency,
-        total: tot,
-        sub_total: sub_t,
-        tax: data.tax,
-        category: data.category,
-        discount: data.discount,
-        barcode: data.barcode,
-        logo: data.logo,
-        bill_of_materials: [
-          {
-            description: data.bill_of_materials[0].description,
-            quantity: data.bill_of_materials[0].quantity,
-            unit_price: unit_p,
-            price: pri,
-          },
-        ],
-      };
-      console.log(data1);
-      formData1.append(
-        "id",
-        "cl/" + Math.floor(Math.random() * 10000).toString()
-      );
-      formData1.append("name", localStorage.getItem("name"));
-      formData1.append("uid", localStorage.getItem("uid"));
-      formData1.append("role", localStorage.getItem("role"));
-      formData1.append("submitted", today);
-      formData1.append("status", "waiting");
-      if (localStorage.getItem("role") == "Associate Practice Lead") {
-        formData1.append("l1", "yes");
-        formData1.append("l2", "no");
-      }
-      if (localStorage.getItem("role") == "Practice Lead") {
-        formData1.append("l2", "yes");
-        formData1.append("l1", "yes");
-      }
-      formData1.append("l3", "no");
-      formData1.append("data", JSON.stringify(data1));
-      formData1.append("token", localStorage.getItem("token"));
-      let res;
-      res = await axios.post("http://172.17.19.26:5000/request", formData1);
-      //res = await axios.post("http://127.0.0.1:5000/api/request", formData1);
-      console.log(res);
-      var config = {
-        headers: {
-          apikey: "R05tpDwAOWMXlS1m79DXMxVZNeux3XbV",
-        },
-      };
-      let res2 = {
-        data: {
-          rates: {
-            INR: 0,
-            EUR: 0,
-            SAR: 0,
-          },
-        },
-      };
-      res2 = await axios.get(
-        "https://api.apilayer.com/exchangerates_data/latest?base=USD",
-        config
-      );
-      console.log(res2);
-      // fetch("https://api.apilayer.com/exchangerates_data/latest?base=USD", requestOptions)
-      //   .then(response => response.text())
-      //   .then(result =>{
-      //     setDailyCurr(result)
-      //   })
-      //   .catch(error => console.log('error', error));
-      setDailyCurr(res2.data);
-      props.setFinalSubmit(true);
-    } catch (error) {
-      window.alert("Some thing went wrong please try again");
-      console.log(error);
-      //window.location.reload();
-    }
-  };
   const add = (text) => {
     const myArray = text.split("\n");
-    console.log(myArray);
+
     return (
       <>
         {myArray.map((str, index) => {
           if (index === 0) {
-            return <p style={{ marginBottom: "0" }}>{str}</p>;
+            return (
+              <p key={index} style={{ marginBottom: "0" }}>
+                {str}
+              </p>
+            );
           } else {
             if (str != "" && str != "\f") {
-              return <p style={{ marginBottom: "0" }}>{str}</p>;
+              return (
+                <p key={index} style={{ marginBottom: "0" }}>
+                  {str}
+                </p>
+              );
             }
             return <></>;
           }
@@ -226,7 +75,14 @@ const Page3Component = (props) => {
         <div class="container bootstrap snippets bootdey">
           <div class="row">
             <div class="col-md-12">
-              <div class="invoice-wrapper">
+              <div
+                class="invoice-wrapper"
+                style={
+                  darkMode
+                    ? { color: "white", textAlign: "center" }
+                    : { color: "black", textAlign: "center" }
+                }
+              >
                 <div class="intro">
                   <div class="receipt-header row">
                     <div class="col-xs-6 col-sm-6 col-md-6">
@@ -280,7 +136,8 @@ const Page3Component = (props) => {
                       <strong>
                         {arabic ? "تاريخ تقديمه" : " Submitted date"}
                       </strong>{" "}
-                      <br /> <span>{today}</span>
+                      <br />
+                      <span> {props.sdate} </span>
                     </div>
                   </div>
                 </div>
@@ -410,19 +267,19 @@ const Page3Component = (props) => {
                                 ] && (
                                   <td style={{ textAlign: "left" }}>
                                     {" "}
-                                    {
+                                    {parseFloat(
                                       data.bill_of_materials[0].unit_price[
                                         index
                                       ]
-                                    }{" "}
+                                    ).toFixed(4)}{" "}
                                   </td>
                                 )}
                                 {data.bill_of_materials[0].price[index] && (
                                   <td style={{ textAlign: "left" }}>
                                     {" "}
-                                    {
+                                    {parseFloat(
                                       data.bill_of_materials[0].price[index]
-                                    }{" "}
+                                    ).toFixed(4)}{" "}
                                   </td>
                                 )}
                               </tr>
@@ -431,6 +288,25 @@ const Page3Component = (props) => {
                         )}
                     </tbody>
                     <tfoot>
+                      {data.currency != "" && (
+                        <tr>
+                          <th
+                            colspan={
+                              data.bill_of_materials[0].description.length
+                            }
+                            style={
+                              arabic
+                                ? { textAlign: "left" }
+                                : { textAlign: "right" }
+                            }
+                          >
+                            {arabic ? "عملة" : "Currency"}
+                          </th>
+                          <th class="" style={{ textAlign: "right" }}>
+                            {data.currency}
+                          </th>
+                        </tr>
+                      )}
                       {data.sub_total != "" && (
                         <tr>
                           <th
@@ -446,7 +322,7 @@ const Page3Component = (props) => {
                             {arabic ? "المجموع الفرعي" : "Sub Total"}
                           </th>
                           <th class="" style={{ textAlign: "right" }}>
-                            {data.sub_total}
+                            {parseFloat(data.sub_total).toFixed(4)}
                           </th>
                         </tr>
                       )}
@@ -504,53 +380,13 @@ const Page3Component = (props) => {
                             {arabic ? "المجموع" : "Total"}
                           </th>
                           <th class="" style={{ textAlign: "right" }}>
-                            {data.currency + " "}
-                            {data.total}
+                            {parseFloat(data.total).toFixed(4)}
                           </th>
                         </tr>
                       )}
                     </tfoot>
                   </table>
                 </div>
-              </div>
-
-              <div className="footer">
-                {" "}
-                <button
-                  className="Predictbtn"
-                  style={{
-                    background: "#ffffff",
-                    border: "1px solid #f87115",
-                    borderRadius: "15px",
-                    padding: "8px 25px",
-                    textTransform: "uppercase",
-                    fontSize: "13px",
-                    fontWeight: "500",
-                    letterSpacing: "1px",
-                    color: "#f87115",
-                    marginRight: "40px",
-                  }}
-                  onClick={(event) => {
-                    event.preventDefault();
-
-                    props.setIndex(1);
-                  }}
-                >
-                  {" "}
-                  <span> {arabic ? "خلف" : "Back"} </span>
-                </button>
-                <button
-                  className="Predictbtn"
-                  onClick={(event) => {
-                    event.preventDefault();
-                    fetch();
-                    navigate("/dashboard");
-                    //window.location.reload();
-                  }}
-                >
-                  {" "}
-                  <span> {arabic ? "مراجعة وإرسال" : "Review & Submit"} </span>
-                </button>
               </div>
             </div>
           </div>
@@ -560,4 +396,4 @@ const Page3Component = (props) => {
   );
 };
 
-export default Page3Component;
+export default AccempComponent;

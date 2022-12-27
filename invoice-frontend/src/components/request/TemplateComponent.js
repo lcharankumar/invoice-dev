@@ -14,12 +14,6 @@ import Page3Component from "./Page3Component";
 const TempleteComponent = () => {
   const [index, setIndex] = useState(0);
   const [file, setFile] = useState(null);
-  useEffect(() => {
-    console.log(index);
-  }, [index]);
-  useEffect(() => {
-    console.log(file);
-  }, [file]);
 
   return (
     <>

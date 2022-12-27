@@ -1,8 +1,14 @@
 import React, { useState, useEffect, useRef } from "react";
 import Modal from "react-bootstrap/Modal";
 import $ from "jquery";
-
+import { DarkModeContext } from "../../context/darkModeContext";
+import { ArabicContext } from "../../context/arabicContext";
+import { useContext } from "react";
 const AddemployeeComponent = (props) => {
+  const { darkMode } = useContext(DarkModeContext);
+  const { arabic } = useContext(ArabicContext);
+  const { dispatch } = useContext(DarkModeContext);
+  const { dispatch1 } = useContext(ArabicContext);
   let curremp = props.curremp;
   const [modalShow, setModalShow] = useState(true);
   const handleClose = () => setModalShow(false);
@@ -20,7 +26,6 @@ const AddemployeeComponent = (props) => {
   const submitHandler = async (event) => {
     event.preventDefault();
     setModalShow(false);
-    console.log(formData);
     let temp = {
       uid: curremp.uid,
       name: formData.name,
@@ -71,7 +76,10 @@ const AddemployeeComponent = (props) => {
             <span style={{ color: "black" }}>{curremp.role}</span>
             <br />
 
-            <span style={{ color: "black" }}>UID: {curremp.uid}</span>
+            <span style={{ color: "black" }}>
+              {arabic ? "بطاقة تعريف:" : "UID:"}
+              {curremp.uid}
+            </span>
           </div>
           <form className="p-3 mt-3" onSubmit={submitHandler}>
             <div className="form-field d-flex align-items-center">
@@ -84,7 +92,7 @@ const AddemployeeComponent = (props) => {
                   setFormData({ ...formData, name: e.target.value })
                 }
                 id="userName"
-                placeholder="Username"
+                placeholder={arabic ? "اسم المستخدم" : "Username"}
                 required={true}
               />
             </div>
@@ -98,12 +106,12 @@ const AddemployeeComponent = (props) => {
                 }
                 name="password"
                 id="pwd"
-                placeholder="Password"
+                placeholder={arabic ? "كلمة المرور" : "Password"}
                 required={true}
               />
             </div>
             <button className="btn mt-3" type="submit" value="Register">
-              Add employee
+              {arabic ? "إضافة موظف" : " Add employee"}
             </button>
           </form>
         </div>

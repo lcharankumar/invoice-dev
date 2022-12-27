@@ -19,7 +19,6 @@ const LoginComponent = (props) => {
 
   const submitHandler = async (event) => {
     event.preventDefault();
-    console.log(formData);
     const formData1 = new FormData();
     formData1.append("uid", formData.name);
     formData1.append("password", formData.password);
@@ -29,21 +28,21 @@ const LoginComponent = (props) => {
         token: "",
       },
     };
-    console.log(formData1);
     res = await axios.post("http://172.17.19.26:5000/login", formData1);
-    console.log(res);
     if (res.data.message == "Success") {
       props.setLogin(true);
       let decoded = {
         name: "",
         uid: "",
         role: "",
+        dept: "",
       };
       decoded = jwt_decode(res.data.token);
       localStorage.setItem("name", decoded.name);
       localStorage.setItem("role", decoded.role);
       localStorage.setItem("uid", decoded.uid);
       localStorage.setItem("token", res.data.token);
+      localStorage.setItem("dept", decoded.dept);
       if (decoded.role == "Practice head") {
         navigate("/head");
       }

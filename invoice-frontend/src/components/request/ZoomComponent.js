@@ -22,8 +22,6 @@ const ZoomComponent = (props) => {
 
   const handleSelect = (selectedIndex, e) => {
     setIndex(selectedIndex);
-    console.log(selectedIndex);
-    console.log(imglist[selectedIndex]);
   };
   const readFileData = (file) => {
     return new Promise((resolve, reject) => {
@@ -56,7 +54,6 @@ const ZoomComponent = (props) => {
       images.push(canvas.toDataURL("image/png", 1));
     }
     canvas.remove();
-    console.log(images);
     setImglist(images);
     setLoaded(true);
     handleShow();
@@ -107,7 +104,6 @@ const ZoomComponent = (props) => {
             background: "#f87115",
           }}
           onClick={() => {
-            console.log(index);
             props.setImg(imglist[index]);
             props.setOrg(imglist[index]);
             var arr = imglist[index].split(","),

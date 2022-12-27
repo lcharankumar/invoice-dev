@@ -1,22 +1,19 @@
 import React, { useState, useEffect, useRef } from "react";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
-import "../style/dashboard.scss";
-import user from "../img/user.png";
+import "../../style/dashboard.scss";
+import user from "../../img/user.png";
 import { Link, useNavigate } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import axios, * as others from "axios";
-import menu from "../img/menu (1).png";
-import level1 from "../img/level1.png";
-import level2 from "../img/level2.png";
-import level3 from "../img/level3.png";
-import "../style/form.scss";
-import logo from "../img/Digiverz.png";
-import logo1 from "../img/Digiverz_dark.png";
+import menu from "../../img/menu (1).png";
+import "../../style/form.scss";
+import logo from "../../img/Digiverz.png";
+import logo1 from "../../img/Digiverz_dark.png";
 
-import { DarkModeContext } from "../context/darkModeContext";
-import { ArabicContext } from "../context/arabicContext";
+import { DarkModeContext } from "../../context/darkModeContext";
+import { ArabicContext } from "../../context/arabicContext";
 import { useContext } from "react";
 
 import { styled } from "@mui/system";
@@ -299,8 +296,6 @@ const HeadDashboardComponent = () => {
       setAccepted(acc);
       setRejected(rej);
       setWaiting(wait);
-      console.log("res", res);
-      console.log("Pending", (acctot + rejtot + pentot).toFixed(2));
     }
     if (dataFetchedRef.current) return;
     dataFetchedRef.current = true;
@@ -329,14 +324,12 @@ const HeadDashboardComponent = () => {
       let fi = "";
 
       li1.map((itm, index) => {
-        console.log(fi);
         if (itm == "of") {
           fi = fi + "من" + " ";
         } else {
           fi = fi + itm + " ";
         }
       });
-      console.log("Text=", fi);
       $(".MuiTablePagination-displayedRows").text(fi);
     }
   }, [arabic, page, darkMode, navopen]);
@@ -370,7 +363,6 @@ const HeadDashboardComponent = () => {
     try {
       const formData1 = new FormData();
 
-      console.log(temp);
       formData1.append("id", temp.id);
       formData1.append("name", temp.name);
       formData1.append("uid", temp.uid);
@@ -389,7 +381,6 @@ const HeadDashboardComponent = () => {
       formData1.append("token", localStorage.getItem("token"));
 
       let res = await axios.post("http://172.17.19.26:5000/update", formData1);
-      console.log(res);
     } catch (error) {
       window.alert("Some thing went wrong please try again");
       console.log(error);
@@ -427,7 +418,6 @@ const HeadDashboardComponent = () => {
     try {
       const formData1 = new FormData();
 
-      console.log(temp);
       formData1.append("id", temp.id);
       formData1.append("name", temp.name);
       formData1.append("uid", temp.uid);
@@ -440,7 +430,6 @@ const HeadDashboardComponent = () => {
       formData1.append("token", localStorage.getItem("token"));
 
       let res = await axios.post("http://172.17.19.26:5000/update", formData1);
-      console.log(res);
     } catch (error) {
       window.alert("Some thing went wrong please try again");
       console.log(error);
@@ -470,10 +459,8 @@ const HeadDashboardComponent = () => {
               setDark(!dark);
               if (!dark) {
                 dispatch({ type: "DARK" });
-                console.log("Dark");
               } else {
                 dispatch({ type: "LIGHT" });
-                console.log("Light");
               }
             }}
           >

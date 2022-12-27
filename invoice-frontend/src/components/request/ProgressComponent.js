@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 
 import Nav_testingComponent from "./Nav_testingComponent";
-import "../style/custom_css.css";
+import "../../style/custom_css.css";
 import Page1Component from "./Page1Component";
 import Page2Component from "./Page2Component";
 import Page3Component from "./Page3Component";
-import { ArabicContext } from "../context/arabicContext";
+import { ArabicContext } from "../../context/arabicContext";
 import { useContext } from "react";
 const ProgressComponent = (props) => {
   const [lang, setLang] = useState("");
@@ -17,13 +17,6 @@ const ProgressComponent = (props) => {
   const [crop, setCrop] = useState(null);
   const [org, setOrg] = useState(null);
   const [name, setName] = useState(null);
-  useEffect(() => {
-    console.log(index);
-    console.log(file);
-  }, [index]);
-  useEffect(() => {
-    console.log(file);
-  }, [file]);
 
   return (
     <>

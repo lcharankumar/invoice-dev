@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Table } from "../data";
-import { ArabicContext } from "../context/arabicContext";
-import { DarkModeContext } from "../context/darkModeContext";
+import { Table } from "../../data";
+import { ArabicContext } from "../../context/arabicContext";
+import { DarkModeContext } from "../../context/darkModeContext";
 
 import { useContext } from "react";
 const TableComponent = (props) => {
@@ -88,7 +88,6 @@ const TableComponent = (props) => {
                   temp.bill_of_materials[0].description.push(" ");
                 setTxt(event.target.value);
                 setData(temp);
-                console.log(temp);
               }}
             ></iconify-icon>{" "}
           </span>
@@ -111,14 +110,12 @@ const TableComponent = (props) => {
                           let temp = data;
                           temp.bill_of_materials[0].description[index] = " ";
                           setData(temp);
-                          console.log(temp.invoice_date);
                         } else {
                           let temp = data;
                           temp.bill_of_materials[0].description[index] =
                             event.target.value;
                           setTxt(event.target.value);
                           setData(temp);
-                          console.log(temp);
                         }
                       }}
                       readOnly={edit === index && disable ? false : true}
@@ -137,14 +134,12 @@ const TableComponent = (props) => {
                           let temp = data;
                           temp.bill_of_materials[0].quantity[index] = " ";
                           setData(temp);
-                          console.log(temp.invoice_date);
                         } else {
                           let temp = data;
                           temp.bill_of_materials[0].quantity[index] =
                             event.target.value;
                           setTxt(event.target.value);
                           setData(temp);
-                          console.log(temp);
                         }
                       }}
                       readOnly={edit === index && disable ? false : true}
@@ -164,14 +159,12 @@ const TableComponent = (props) => {
                           let temp = data;
                           temp.bill_of_materials[0].unit_price[index] = " ";
                           setData(temp);
-                          console.log(temp.invoice_date);
                         } else {
                           let temp = data;
                           temp.bill_of_materials[0].unit_price[index] =
                             event.target.value;
                           setTxt(event.target.value);
                           setData(temp);
-                          console.log(temp);
                         }
                       }}
                       readOnly={edit === index && disable ? false : true}
@@ -190,14 +183,12 @@ const TableComponent = (props) => {
                           let temp = data;
                           temp.bill_of_materials[0].price[index] = " ";
                           setData(temp);
-                          console.log(temp.invoice_date);
                         } else {
                           let temp = data;
                           temp.bill_of_materials[0].price[index] =
                             event.target.value;
                           setTxt(event.target.value);
                           setData(temp);
-                          console.log(temp);
                         }
                       }}
                       readOnly={edit === index && disable ? false : true}
@@ -228,9 +219,7 @@ const TableComponent = (props) => {
                           ].trimStart();
 
                         setData(temp);
-                        console.log(temp.invoice_date);
                       }
-                      console.log(disable);
                     }}
                   >
                     {edit === index && disable ? (

@@ -1,6 +1,6 @@
 import React from "react";
 import { Audio } from "react-loader-spinner";
-import { ArabicContext } from "../context/arabicContext";
+import { ArabicContext } from "../../context/arabicContext";
 import { useContext } from "react";
 const SpinnerComponent = () => {
   const { arabic } = useContext(ArabicContext);

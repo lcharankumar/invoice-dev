@@ -1,5 +1,5 @@
 // import "./App.css";
-import "../style/custom_css.css";
+import "../../style/custom_css.css";
 // icons
 // import HomeIcon from '@mui/icons-material/Home';
 import Row from "react-bootstrap/Row";
@@ -13,9 +13,9 @@ import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import Offcanvas from "react-bootstrap/Offcanvas";
-import { DarkModeContext } from "../context/darkModeContext";
+import { DarkModeContext } from "../../context/darkModeContext";
 import { useContext } from "react";
-import { ArabicContext } from "../context/arabicContext";
+import { ArabicContext } from "../../context/arabicContext";
 function Nav_testingComponent() {
   const { darkMode } = useContext(DarkModeContext);
   const { dispatch } = useContext(DarkModeContext);
@@ -92,10 +92,8 @@ function Nav_testingComponent() {
                       setDark(!dark);
                       if (!dark) {
                         dispatch({ type: "DARK" });
-                        console.log("Dark");
                       } else {
                         dispatch({ type: "LIGHT" });
-                        console.log("Light");
                       }
                     }}
                   >

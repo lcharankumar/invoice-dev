@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ZoomComponent from "./ZoomComponent";
-import { ArabicContext } from "../context/arabicContext";
+import { ArabicContext } from "../../context/arabicContext";
 import { useContext } from "react";
 import $ from "jquery";
 
@@ -31,7 +31,6 @@ const Page1Component = (props) => {
       let files = Array.from(fileList);
       props.setName(files[0].name.slice(-12));
       setPdfFile(files[0]);
-      console.log(files[0].type);
       if (files[0].type == "application/pdf") {
         setPdf(true);
       } else {
@@ -46,8 +45,6 @@ const Page1Component = (props) => {
         props.setLang(lang ? "english" : "arabic");
         props.setIndex(1);
       }
-
-      console.log(props.img);
     }
   };
 
@@ -69,7 +66,6 @@ const Page1Component = (props) => {
             onChange={(e) => {
               if (e.target.files) {
                 e.preventDefault();
-                console.log(e.target.files[0]);
                 props.setName(e.target.files[0].name.slice(-12));
 
                 setPdfFile(e.target.files[0]);
@@ -77,7 +73,6 @@ const Page1Component = (props) => {
                   setPdf(true);
                 } else {
                   props.setFile(e.target.files[0]);
-                  console.log(e.target.files);
                   props.setName(e.target.files[0].name.slice(-12));
                   const reader = new FileReader();
                   reader.addEventListener("load", () => {
@@ -85,7 +80,6 @@ const Page1Component = (props) => {
                     props.setOrg(reader.result.toString() || "");
                   });
                   reader.readAsDataURL(e.target.files[0]);
-                  console.log(props.img);
                   props.setLang(lang ? "english" : "arabic");
                   props.setIndex(1);
                 }
@@ -116,7 +110,6 @@ const Page1Component = (props) => {
                   type="checkbox"
                   onChange={(e) => {
                     setLang(!lang);
-                    console.log(lang ? "english" : "arabic");
                   }}
                 />
                 <div>

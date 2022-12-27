@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import "../style/profile.scss";
+import "../../style/profile.scss";
 import $ from "jquery";
-import { DarkModeContext } from "../context/darkModeContext";
+import { DarkModeContext } from "../../context/darkModeContext";
 import { useContext } from "react";
-import { ArabicContext } from "../context/arabicContext";
-import add from "../img/addimage.jpg";
+import { ArabicContext } from "../../context/arabicContext";
+import add from "../../img/addimage.jpg";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
 import axios, * as others from "axios";
@@ -53,19 +53,17 @@ const ProfileComponent = () => {
     formData1.append("img", formData.img);
     formData1.append("token", localStorage.getItem("token"));
     event.preventDefault();
-    console.log(formData);
     try {
       let res = {
         data: "",
       };
-      res = await axios.post("http://172.17.19.26:5000/profile", formData1);
+      res = await axios.post("http://127.0.0.1:5000/api/profile", formData1);
       if (res.data == "Success") {
         setAlert(true);
       }
       const timer = setTimeout(() => {
         setAlert(false);
       }, 4000);
-      console.log(res);
     } catch (error) {
       window.alert("Some thing went wrong please try again");
       console.log(error);
@@ -75,7 +73,6 @@ const ProfileComponent = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const changeClass = (id) => {
-    console.log(id);
     if (id === "payment") {
       $("#profile").removeClass("active");
       $("#subscription").removeClass("active");
@@ -98,9 +95,11 @@ const ProfileComponent = () => {
       $(".rightbox").children().not(".subscription").addClass("noshow");
     }
   };
+  const [apl, setApl] = useState("");
+  const [pl, setPl] = useState("");
+  const [ph, setPh] = useState("");
 
   useEffect(() => {
-    console.log(arabic);
     async function fetchData() {
       let res = {
         data: [
@@ -125,9 +124,42 @@ const ProfileComponent = () => {
       const formData1 = new FormData();
       formData1.append("uid", localStorage.getItem("uid"));
       formData1.append("token", localStorage.getItem("token"));
-      res = await axios.post("http://172.17.19.26:5000/getprofile", formData1);
-      setFormData(res.data[0]);
-      console.log("res", res);
+      res = await axios.post("http://127.0.0.1:5000/api/getprofile", formData1);
+      const formData2 = new FormData();
+      formData2.append("token", localStorage.getItem("token"));
+      let res1 = {
+        data: [
+          {
+            uid: "",
+            name: "",
+            role: "",
+            dept: "",
+          },
+        ],
+      };
+      res1 = await axios.post("http://127.0.0.1:5000/api/getallemp", formData2);
+      let tempemp1 = [];
+      res1.data.map((itms, index) => {
+        if (
+          itms.dept == localStorage.getItem("dept") &&
+          itms.role == "Practice head"
+        ) {
+          setPh(itms.name);
+        }
+        if (
+          itms.dept == localStorage.getItem("dept") &&
+          itms.role == "Practice Lead"
+        ) {
+          setPl(itms.name);
+        }
+        if (
+          itms.dept == localStorage.getItem("dept") &&
+          itms.role == "Associate Practice Lead"
+        ) {
+          setApl(itms.name);
+        }
+      });
+      setFormData(...formData, ...res.data[0]);
     }
     fetchData();
   }, []);
@@ -171,19 +203,19 @@ const ProfileComponent = () => {
                       <strong>{arabic ? "تقارير ل" : "Reports to"}</strong>
                       {localStorage.getItem("role") == "Employee" && (
                         <p>
-                          Chandrashekar <br /> Associate practice Lead
+                          {apl} <br /> Associate practice Lead
                         </p>
                       )}
                       {localStorage.getItem("role") ==
                         "Associate Practice Lead" && (
                         <p>
-                          Girish <br />
+                          {pl} <br />
                           Practice Lead
                         </p>
                       )}
                       {localStorage.getItem("role") == "Practice Lead" && (
                         <p>
-                          Selva <br /> Practice head
+                          {ph} <br /> Practice head
                         </p>
                       )}
                     </>
@@ -192,7 +224,11 @@ const ProfileComponent = () => {
               }
             >
               <div class="img-container">
-                <img src={formData.img ? formData.img : add} alt="" />
+                {formData.img ? (
+                  <img src={formData.img} alt="" />
+                ) : (
+                  <img src={add} alt="" />
+                )}
               </div>
             </OverlayTrigger>
 
@@ -208,7 +244,6 @@ const ProfileComponent = () => {
                   const reader = new FileReader();
                   reader.addEventListener("load", () => {
                     setImg(reader.result.toString() || "");
-                    console.log(reader.result.toString());
                     setFormData({
                       ...formData,
                       ["img"]: reader.result.toString(),
@@ -283,10 +318,8 @@ const ProfileComponent = () => {
                 setDark(!dark);
                 if (!dark) {
                   dispatch({ type: "DARK" });
-                  console.log("Dark");
                 } else {
                   dispatch({ type: "LIGHT" });
-                  console.log("Light");
                 }
               }}
             >

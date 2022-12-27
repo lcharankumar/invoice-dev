@@ -1,25 +1,25 @@
 import React, { useState, useEffect, useRef } from "react";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
-import "../style/dashboard.scss";
-import user from "../img/user.png";
+import "../../style/dashboard.scss";
+import user from "../../img/user.png";
 import { Link, useNavigate } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import axios, * as others from "axios";
-import menu from "../img/menu (1).png";
-import level1 from "../img/level1.png";
-import level2 from "../img/level2.png";
-import level3 from "../img/level3.png";
-import "../style/form.scss";
-import logo from "../img/Digiverz.png";
-import logo1 from "../img/Digiverz_dark.png";
-import add from "../img/location.gif";
-import { DarkModeContext } from "../context/darkModeContext";
-import { ArabicContext } from "../context/arabicContext";
-import { useContext } from "react";
+import menu from "../../img/menu (1).png";
+import level1 from "../../img/level1.png";
+import level2 from "../../img/level2.png";
+import level3 from "../../img/level3.png";
+import "../../style/form.scss";
+import logo from "../../img/Digiverz.png";
+import logo1 from "../../img/Digiverz_dark.png";
 import AccempComponent from "./AccempComponent";
-import HomeLoaderComponent from "./HomeLoaderComponent";
+import { ThreeCircles } from "react-loader-spinner";
+import HomeLoaderComponent from "../HomeLoaderComponent";
+import { DarkModeContext } from "../../context/darkModeContext";
+import { ArabicContext } from "../../context/arabicContext";
+import { useContext } from "react";
 
 import { styled } from "@mui/system";
 import TablePaginationUnstyled, {
@@ -27,37 +27,21 @@ import TablePaginationUnstyled, {
 } from "@mui/base/TablePaginationUnstyled";
 
 import $ from "jquery";
-import { tab } from "@testing-library/user-event/dist/tab";
 
-const AdminDashboardComponent = () => {
+const DashboardComponent = (props) => {
+  const [loadCurr, setLoadCurr] = useState(false);
   const { darkMode } = useContext(DarkModeContext);
   const { arabic } = useContext(ArabicContext);
   const { dispatch } = useContext(DarkModeContext);
   const { dispatch1 } = useContext(ArabicContext);
   const [loading, setLoading] = useState(true);
-  const [mainCurr, setMainCurr] = useState("$");
-  const toInr = (amount) => {
-    return parseFloat(amount) * 87.25;
-  };
-  const toEuro = (amount) => {
-    return parseFloat(amount) * 0.95;
-  };
-  const toSar = (amount) => {
-    return parseFloat(amount) * 3.76;
-  };
-  const currencyCon = (amt) => {
-    if (mainCurr == "₹") {
-      return toInr(amt).toFixed(4);
-    }
-    if (mainCurr == "€") {
-      return toEuro(amt).toFixed(4);
-    }
-    if (mainCurr == "﷼") {
-      return toSar(amt).toFixed(4);
-    }
-
-    return amt;
-  };
+  const [dailyCurr, setDailyCurr] = useState({
+    rates: {
+      EUR: 1.06,
+      INR: 82.79,
+      SAR: 3.76,
+    },
+  });
   const [mainData, setMainData] = useState([
     {
       id: "",
@@ -66,8 +50,6 @@ const AdminDashboardComponent = () => {
       l2: "",
       l3: "",
       submitted: "",
-      role: "",
-      name: "",
       data: {
         company_name: "",
         from_address: "",
@@ -96,6 +78,11 @@ const AdminDashboardComponent = () => {
     },
   ]);
   const navigate = useNavigate();
+  useEffect(() => {
+    if (localStorage.getItem("role") == "admin") {
+      navigate("/Admin");
+    }
+  }, []);
 
   const CustomTablePagination = styled(TablePaginationUnstyled)`
     & .${classes.toolbar} {
@@ -159,7 +146,10 @@ const AdminDashboardComponent = () => {
   const [curr, setCurr] = useState("");
   const [navopen, setNavopen] = useState(true);
   const dataFetchedRef = useRef(false);
-
+  const [mainCurr, setMainCurr] = useState("$");
+  const [apl, setApl] = useState("");
+  const [pl, setPl] = useState("");
+  const [ph, setPh] = useState("");
   let acc = 0;
   let rej = 0;
   let wait = 0;
@@ -176,10 +166,7 @@ const AdminDashboardComponent = () => {
       Simple tooltip
     </Tooltip>
   );
-  const [cord, setCord] = useState({
-    latt: "",
-    longt: "",
-  });
+
   const [tabdata, setTabdata] = useState({
     id: "",
     status: "",
@@ -187,8 +174,6 @@ const AdminDashboardComponent = () => {
     l2: "",
     l3: "",
     submitted: "",
-    role: "",
-    name: "",
     data: {
       company_name: "",
       from_address: "",
@@ -215,7 +200,57 @@ const AdminDashboardComponent = () => {
       ],
     },
   });
+  const [mainempData, setMainempData] = useState([
+    {
+      uid: "",
+      name: "",
+      role: "",
+      dept: "",
+    },
+  ]);
   useEffect(() => {
+    const getCurr = async () => {
+      var myHeaders = new Headers();
+      myHeaders.append("apikey", "R05tpDwAOWMXlS1m79DXMxVZNeux3XbV");
+
+      var config = {
+        headers: {
+          apikey: "R05tpDwAOWMXlS1m79DXMxVZNeux3XbV",
+        },
+      };
+      let res2 = {
+        data: {
+          rates: {
+            INR: 0,
+            EUR: 0,
+            SAR: 0,
+          },
+        },
+      };
+
+      try {
+        // res2 = await axios.get(
+        //   "https://api.apilayer.com/exchangerates_data/latest?base=USD",
+        //   config
+        // );
+        // setDailyCurr(res2.data);
+      } catch (error) {}
+      // fetch("https://api.apilayer.com/exchangerates_data/latest?base=USD", requestOptions)
+      //   .then(response => response.text())
+      //   .then(result =>{
+      //     setDailyCurr(result)
+      //   })
+      //   .catch(error => console.log('error', error));
+
+      setLoadCurr(true);
+    };
+    if (!loadCurr) {
+      getCurr();
+    }
+  }, []);
+
+  useEffect(() => {
+    props.setFinalSubmit(false);
     async function fetchData() {
       let res = {
         data: [
@@ -260,281 +295,159 @@ const AdminDashboardComponent = () => {
         ]
       
          
-        } `,
+        }`,
           },
         ],
       };
       const formData1 = new FormData();
       formData1.append("uid", localStorage.getItem("uid"));
       formData1.append("token", localStorage.getItem("token"));
-      res = await axios.post("http://172.17.19.26:5000/allrequests", formData1);
-      if (localStorage.getItem("role") == "Associate Practice Lead") {
-        res.data = res.data.filter(function (itm) {
-          return itm.role != "Associate Practice Lead";
-        });
-        res.data = res.data.filter(function (itm) {
-          return itm.role != "Practice Lead";
-        });
-      }
-      console.log("res1", res);
-      if (localStorage.getItem("role") == "Practice Lead") {
-        res.data = res.data.filter(function (itm) {
-          return itm.role != "Practice Lead";
-        });
-        res.data = res.data.filter(function (itm) {
-          return itm.l1 != "no";
-        });
-      }
-
-      if (localStorage.getItem("role") == "Associate Practice Lead") {
-        res.data.map((it, index) => {
-          if (it.l1 == "rej") {
-            rej = rej + 1;
-            let temp = {
-              company_name: "",
-              from_address: "",
-              to_address: "",
-              invoice_date: "",
-              due_date: "",
-              phone_number: "",
-              invoice_number: "",
-              currency: "",
-              total: "",
-              sub_total: "",
-              tax: "",
-              category: "",
-              discount: "",
-              barcode: "",
-              logo: "",
-              bill_of_materials: [
-                {
-                  description: [""],
-                  quantity: [""],
-                  unit_price: [""],
-                  price: [""],
-                },
-              ],
-            };
-            try {
-              temp = JSON.parse(it.data);
-            } catch (error) {
-              temp = it.data;
-            }
-
-            rejtot = rejtot + parseFloat(temp.total);
-            setCurr(temp.currency);
+      const formData2 = new FormData();
+      formData2.append("token", localStorage.getItem("token"));
+      res = await axios.post("http://172.17.19.26:5000/requests", formData1);
+      let res1 = {
+        data: [
+          {
+            uid: "",
+            name: "",
+            role: "",
+            dept: "",
+          },
+        ],
+      };
+      res1 = await axios.post("http://172.17.19.26:5000/getallemp", formData2);
+      let tempemp1 = [];
+      res1.data.map((itms, index) => {
+        if (
+          itms.dept == localStorage.getItem("dept") &&
+          itms.role == "Practice head"
+        ) {
+          setPh(itms.name);
+        }
+        if (
+          itms.dept == localStorage.getItem("dept") &&
+          itms.role == "Practice Lead"
+        ) {
+          setPl(itms.name);
+        }
+        if (
+          itms.dept == localStorage.getItem("dept") &&
+          itms.role == "Associate Practice Lead"
+        ) {
+          setApl(itms.name);
+        }
+      });
+      res.data.map((it, index) => {
+        if (it.status == "rejected") {
+          rej = rej + 1;
+          let temp = {
+            company_name: "",
+            from_address: "",
+            to_address: "",
+            invoice_date: "",
+            due_date: "",
+            phone_number: "",
+            invoice_number: "",
+            currency: "",
+            total: "",
+            sub_total: "",
+            tax: "",
+            category: "",
+            discount: "",
+            barcode: "",
+            logo: "",
+            bill_of_materials: [
+              {
+                description: [""],
+                quantity: [""],
+                unit_price: [""],
+                price: [""],
+              },
+            ],
+          };
+          try {
+            temp = JSON.parse(it.data);
+          } catch (error) {
+            temp = it.data;
           }
-          if (it.l1 == "no") {
-            wait = wait + 1;
-            let temp = {
-              company_name: "",
-              from_address: "",
-              to_address: "",
-              invoice_date: "",
-              due_date: "",
-              phone_number: "",
-              invoice_number: "",
-              currency: "",
-              total: "",
-              sub_total: "",
-              tax: "",
-              category: "",
-              discount: "",
-              barcode: "",
-              logo: "",
-              bill_of_materials: [
-                {
-                  description: [""],
-                  quantity: [""],
-                  unit_price: [""],
-                  price: [""],
-                },
-              ],
-            };
-            try {
-              temp = JSON.parse(it.data);
-            } catch (error) {
-              temp = it.data;
-            }
 
-            pentot = pentot + parseFloat(temp.total);
-            setCurr(temp.currency);
+          rejtot = rejtot + parseFloat(temp.total);
+          setCurr(temp.currency);
+        }
+        if (it.status == "waiting") {
+          wait = wait + 1;
+          let temp = {
+            company_name: "",
+            from_address: "",
+            to_address: "",
+            invoice_date: "",
+            due_date: "",
+            phone_number: "",
+            invoice_number: "",
+            currency: "",
+            total: "",
+            sub_total: "",
+            tax: "",
+            category: "",
+            discount: "",
+            barcode: "",
+            logo: "",
+            bill_of_materials: [
+              {
+                description: [""],
+                quantity: [""],
+                unit_price: [""],
+                price: [""],
+              },
+            ],
+          };
+          try {
+            temp = JSON.parse(it.data);
+          } catch (error) {
+            temp = it.data;
           }
-          if (it.l1 == "yes") {
-            acc = acc + 1;
-            let temp = {
-              company_name: "",
-              from_address: "",
-              to_address: "",
-              invoice_date: "",
-              due_date: "",
-              phone_number: "",
-              invoice_number: "",
-              currency: "",
-              total: "",
-              sub_total: "",
-              tax: "",
-              category: "",
-              discount: "",
-              barcode: "",
-              logo: "",
-              bill_of_materials: [
-                {
-                  description: [""],
-                  quantity: [""],
-                  unit_price: [""],
-                  price: [""],
-                },
-              ],
-            };
-            try {
-              temp = JSON.parse(it.data);
-            } catch (error) {
-              temp = it.data;
-            }
 
-            acctot = acctot + parseFloat(temp.total);
-
-            setCurr(temp.currency);
+          pentot = pentot + parseFloat(temp.total);
+          setCurr(temp.currency);
+        }
+        if (it.status == "accepted") {
+          acc = acc + 1;
+          let temp = {
+            company_name: "",
+            from_address: "",
+            to_address: "",
+            invoice_date: "",
+            due_date: "",
+            phone_number: "",
+            invoice_number: "",
+            currency: "",
+            total: "",
+            sub_total: "",
+            tax: "",
+            category: "",
+            discount: "",
+            barcode: "",
+            logo: "",
+            bill_of_materials: [
+              {
+                description: [""],
+                quantity: [""],
+                unit_price: [""],
+                price: [""],
+              },
+            ],
+          };
+          try {
+            temp = JSON.parse(it.data);
+          } catch (error) {
+            temp = it.data;
           }
-        });
-      }
-      if (localStorage.getItem("role") == "Practice Lead") {
-        res.data.map((it, index) => {
-          if (it.l2 == "rej") {
-            rej = rej + 1;
-            let temp = {
-              company_name: "",
-              from_address: "",
-              to_address: "",
-              invoice_date: "",
-              due_date: "",
-              phone_number: "",
-              invoice_number: "",
-              currency: "",
-              total: "",
-              sub_total: "",
-              tax: "",
-              category: "",
-              discount: "",
-              barcode: "",
-              logo: "",
-              bill_of_materials: [
-                {
-                  description: [""],
-                  quantity: [""],
-                  unit_price: [""],
-                  price: [""],
-                },
-              ],
-            };
-            try {
-              temp = JSON.parse(it.data);
-            } catch (error) {
-              temp = it.data;
-            }
 
-            rejtot = rejtot + parseFloat(temp.total);
-            setCurr(temp.currency);
-          }
-          if (it.l2 == "no") {
-            wait = wait + 1;
-            let temp = {
-              company_name: "",
-              from_address: "",
-              to_address: "",
-              invoice_date: "",
-              due_date: "",
-              phone_number: "",
-              invoice_number: "",
-              currency: "",
-              total: "",
-              sub_total: "",
-              tax: "",
-              category: "",
-              discount: "",
-              barcode: "",
-              logo: "",
-              bill_of_materials: [
-                {
-                  description: [""],
-                  quantity: [""],
-                  unit_price: [""],
-                  price: [""],
-                },
-              ],
-            };
-            try {
-              temp = JSON.parse(it.data);
-            } catch (error) {
-              temp = it.data;
-            }
+          acctot = acctot + parseFloat(temp.total);
 
-            pentot = pentot + parseFloat(temp.total);
-            setCurr(temp.currency);
-          }
-          if (it.l2 == "yes") {
-            acc = acc + 1;
-            let temp = {
-              company_name: "",
-              from_address: "",
-              to_address: "",
-              invoice_date: "",
-              due_date: "",
-              phone_number: "",
-              invoice_number: "",
-              currency: "",
-              total: "",
-              sub_total: "",
-              tax: "",
-              category: "",
-              discount: "",
-              barcode: "",
-              logo: "",
-              bill_of_materials: [
-                {
-                  description: [""],
-                  quantity: [""],
-                  unit_price: [""],
-                  price: [""],
-                },
-              ],
-            };
-            try {
-              temp = JSON.parse(it.data);
-            } catch (error) {
-              temp = it.data;
-            }
-
-            acctot = acctot + parseFloat(temp.total);
-
-            setCurr(temp.currency);
-          }
-        });
-      }
-      if (localStorage.getItem("role") == "Associate Practice Lead") {
-        res.data = res.data.filter(function (itm) {
-          return itm.l1 != "yes";
-        });
-        res.data = res.data.filter(function (itm) {
-          return itm.status != "accepted";
-        });
-        res.data = res.data.filter(function (itm) {
-          return itm.status != "rejected";
-        });
-      }
-      if (localStorage.getItem("role") == "Practice Lead") {
-        res.data = res.data.filter(function (itm) {
-          return itm.l2 != "yes";
-        });
-        res.data = res.data.filter(function (itm) {
-          return itm.status != "accepted";
-        });
-
-        res.data = res.data.filter(function (itm) {
-          return itm.status != "rejected";
-        });
-      }
+          setCurr(temp.currency);
+        }
+      });
       setMainData(res.data);
       setTotal((acctot + rejtot + pentot).toFixed(2));
       setaccTotal(acctot.toFixed(2));
@@ -543,14 +456,12 @@ const AdminDashboardComponent = () => {
       setAccepted(acc);
       setRejected(rej);
       setWaiting(wait);
+
       setLoading(false);
-      console.log("res", res);
-      console.log("Pending", (acctot + rejtot + pentot).toFixed(2));
     }
-    if (dataFetchedRef.current) return;
-    dataFetchedRef.current = true;
+
     fetchData();
-  }, []);
+  }, [props.finalSubmit]);
   var date = new Date();
   var hours = date.getHours();
   var minutes = date.getMinutes();
@@ -574,199 +485,93 @@ const AdminDashboardComponent = () => {
       let fi = "";
 
       li1.map((itm, index) => {
-        console.log(fi);
         if (itm == "of") {
           fi = fi + "من" + " ";
         } else {
           fi = fi + itm + " ";
         }
       });
-      console.log("Text=", fi);
       $(".MuiTablePagination-displayedRows").text(fi);
     }
   }, [arabic, page, darkMode, navopen]);
 
-  const approve = async (data) => {
-    let temp = {
-      id: "",
-      status: "",
-      l1: "",
-      l2: "",
-      l3: "",
-      role: "",
-      name: "",
-      uid: "",
-      data: {
-        category: "",
-        invono: "",
-        submittedDate: "",
-        invoiceDate: "",
-        address: "",
-        total: "",
-        headers: [],
-        values: [[]],
-        subtotal: "",
-        taxamount: "",
-        tax: "",
-        currency: "",
-      },
-    };
-    temp = data;
-    try {
-      const formData1 = new FormData();
-
-      console.log(temp);
-      formData1.append("id", temp.id);
-      formData1.append("name", temp.name);
-      formData1.append("uid", temp.uid);
-      formData1.append("role", temp.role);
-      formData1.append("submitted", temp.submitted);
-      if (localStorage.getItem("role") == "Associate Practice Lead") {
-        formData1.append("l1", "yes");
-        formData1.append("l2", temp.l2);
-        if (temp.l2 == "yes" && temp.l3 == "yes") {
-          formData1.append("status", "accepted");
-        } else {
-          formData1.append("status", temp.status);
-        }
-      }
-      if (localStorage.getItem("role") == "Practice Lead") {
-        formData1.append("l2", "yes");
-        formData1.append("l1", temp.l1);
-        if (temp.l1 == "yes" && temp.l3 == "yes") {
-          formData1.append("status", "accepted");
-        } else {
-          formData1.append("status", temp.status);
-        }
-      }
-      formData1.append("l3", temp.l3);
-      formData1.append("data", JSON.stringify(temp.data));
-      formData1.append("token", localStorage.getItem("token"));
-
-      let res = await axios.post("http://172.17.19.26:5000/update", formData1);
-      console.log(res);
-    } catch (error) {
-      window.alert("Some thing went wrong please try again");
-      console.log(error);
-      window.location.reload();
-    }
-    window.location.reload();
+  const toInr = (amount) => {
+    return parseFloat(amount) * dailyCurr.rates.INR;
   };
-
-  const reject = async (data) => {
-    let temp = {
-      id: "",
-      status: "",
-      l1: "",
-      l2: "",
-      l3: "",
-      submitted: "",
-      data: {
-        company_name: "",
-        from_address: "",
-        to_address: "",
-        invoice_date: "",
-        due_date: "",
-        phone_number: "",
-        invoice_number: "",
-        currency: "",
-        total: "",
-        sub_total: "",
-        tax: "",
-        category: "",
-        discount: "",
-        barcode: "",
-        logo: "",
-        bill_of_materials: [
-          {
-            description: [""],
-            quantity: [""],
-            unit_price: [""],
-            price: [""],
-          },
-        ],
-      },
-    };
-    temp = data;
-    try {
-      const formData1 = new FormData();
-
-      console.log(temp);
-      formData1.append("id", temp.id);
-      formData1.append("name", temp.name);
-      formData1.append("uid", temp.uid);
-      formData1.append("role", temp.role);
-      formData1.append("submitted", temp.submitted);
-      if (localStorage.getItem("role") == "Associate Practice Lead") {
-        formData1.append("l1", "rej");
-        formData1.append("l2", "rej");
-        formData1.append("l3", "rej");
-        formData1.append("status", "rejected");
-      }
-      if (localStorage.getItem("role") == "Practice Lead") {
-        formData1.append("l1", "rej");
-        formData1.append("l2", "rej");
-        formData1.append("l3", "rej");
-        formData1.append("status", "rejected");
-      }
-      formData1.append("data", JSON.stringify(temp.data));
-      formData1.append("token", localStorage.getItem("token"));
-
-      let res = await axios.post("http://172.17.19.26:5000/update", formData1);
-      console.log(res);
-    } catch (error) {
-      window.alert("Some thing went wrong please try again");
-      console.log(error);
-      window.location.reload();
-    }
-    window.location.reload();
+  const toEuro = (amount) => {
+    return parseFloat(amount) / dailyCurr.rates.EUR;
   };
+  const toSar = (amount) => {
+    return parseFloat(amount) * dailyCurr.rates.SAR;
+  };
+  const currencyCon = (amt) => {
+    if (mainCurr == "₹") {
+      return toInr(amt).toFixed(4);
+    }
+    if (mainCurr == "€") {
+      return toEuro(amt).toFixed(4);
+    }
+    if (mainCurr == "﷼") {
+      return toSar(amt).toFixed(4);
+    }
 
-  const coor = async (add) => {
-    let res = {
-      data: {
-        latt: "",
-        longt: "",
-      },
-    };
-    res = await axios.get(
-      "https://geocode.xyz/Hauptstr.,+57632+Berzhausen?json=1&auth=151045507843534e15982112x121263"
-    );
-    console.log(res);
-    return {
-      latt: res.data.latt,
-      longt: res.data.longt,
-    };
+    return parseFloat(amt).toFixed(4);
   };
 
   return (
     <div className=" dashboard Body2">
       {loading ? (
-        <HomeLoaderComponent></HomeLoaderComponent>
+        <HomeLoaderComponent />
       ) : (
         <div
           class="wrapper"
           style={arabic ? { flexDirection: "row-reverse" } : {}}
         >
           <div class="left-side" style={navopen ? {} : { display: "none" }}>
-            <Link
-              to="/"
-              style={darkMode ? { color: "#9a9ba6" } : { color: "black" }}
+            <button
+              style={{
+                background: "transparent",
+                border: "none",
+                color: "currentColor",
+                marginBottom: "80px",
+                marginTop: "-50px",
+              }}
+              onClick={() => setNavopen(false)}
             >
-              <svg viewBox="0 1 511 512" fill="currentColor">
-                <path d="M498.7 222.7L289.8 13.8a46.8 46.8 0 00-66.7 0L14.4 222.6l-.2.2A47.2 47.2 0 0047 303h8.3v153.7a55.2 55.2 0 0055.2 55.2h81.7a15 15 0 0015-15V376.5a25.2 25.2 0 0125.2-25.2h48.2a25.2 25.2 0 0125.1 25.2V497a15 15 0 0015 15h81.8a55.2 55.2 0 0055.1-55.2V303.1h7.7a47.2 47.2 0 0033.4-80.4zm-21.2 45.4a17 17 0 01-12.2 5h-22.7a15 15 0 00-15 15v168.7a25.2 25.2 0 01-25.1 25.2h-66.8V376.5a55.2 55.2 0 00-55.1-55.2h-48.2a55.2 55.2 0 00-55.2 55.2V482h-66.7a25.2 25.2 0 01-25.2-25.2V288.1a15 15 0 00-15-15h-23A17.2 17.2 0 0135.5 244L244.4 35a17 17 0 0124.2 0l208.8 208.8v.1a17.2 17.2 0 010 24.2zm0 0" />
+              <svg
+                viewBox="0 0 24 24"
+                fill="white"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M18 6L6 18M6 6l12 12" />
               </svg>
-            </Link>
+            </button>
+            <svg viewBox="0 1 511 512" fill="currentColor" class="active">
+              <path d="M498.7 222.7L289.8 13.8a46.8 46.8 0 00-66.7 0L14.4 222.6l-.2.2A47.2 47.2 0 0047 303h8.3v153.7a55.2 55.2 0 0055.2 55.2h81.7a15 15 0 0015-15V376.5a25.2 25.2 0 0125.2-25.2h48.2a25.2 25.2 0 0125.1 25.2V497a15 15 0 0015 15h81.8a55.2 55.2 0 0055.1-55.2V303.1h7.7a47.2 47.2 0 0033.4-80.4zm-21.2 45.4a17 17 0 01-12.2 5h-22.7a15 15 0 00-15 15v168.7a25.2 25.2 0 01-25.1 25.2h-66.8V376.5a55.2 55.2 0 00-55.1-55.2h-48.2a55.2 55.2 0 00-55.2 55.2V482h-66.7a25.2 25.2 0 01-25.2-25.2V288.1a15 15 0 00-15-15h-23A17.2 17.2 0 0135.5 244L244.4 35a17 17 0 0124.2 0l208.8 208.8v.1a17.2 17.2 0 010 24.2zm0 0" />
+            </svg>
+            <br />
+            <div>
+              <Link
+                style={darkMode ? { color: "#9a9ba6" } : { color: "black" }}
+                to="/profile"
+              >
+                <svg viewBox="-42 0 512 512" fill="currentColor">
+                  <path d="M210.4 246.6c33.8 0 63.2-12.1 87.1-36.1 24-24 36.2-53.3 36.2-87.2 0-33.9-12.2-63.2-36.2-87.2-24-24-53.3-36.1-87.1-36.1-34 0-63.3 12.2-87.2 36.1S87 89.4 87 123.3c0 33.9 12.2 63.2 36.2 87.2 24 24 53.3 36.1 87.2 36.1zm-66-189.3a89.1 89.1 0 0166-27.3c26 0 47.5 9 66 27.3a89.2 89.2 0 0127.3 66c0 26-9 47.6-27.4 66a89.1 89.1 0 01-66 27.3c-26 0-47.5-9-66-27.3a89.1 89.1 0 01-27.3-66c0-26 9-47.6 27.4-66zm0 0M426.1 393.7a304.6 304.6 0 00-12-64.9 160.7 160.7 0 00-13.5-30.3c-5.7-10.2-12.5-19-20.1-26.3a88.9 88.9 0 00-29-18.2 100.1 100.1 0 00-37-6.7c-5.2 0-10.2 2.2-20 8.5-6 4-13 8.5-20.9 13.5-6.7 4.3-15.8 8.3-27 11.9a107.3 107.3 0 01-66 0 119.3 119.3 0 01-27-12l-21-13.4c-9.7-6.3-14.8-8.5-20-8.5a100 100 0 00-37 6.7 88.8 88.8 0 00-29 18.2 114.4 114.4 0 00-20.1 26.3 161 161 0 00-13.4 30.3A302.5 302.5 0 001 393.7c-.7 9.8-1 20-1 30.2 0 26.8 8.5 48.4 25.3 64.4C41.8 504 63.6 512 90.3 512h246.5c26.7 0 48.6-8 65.1-23.7 16.8-16 25.3-37.6 25.3-64.4a437 437 0 00-1-30.2zm-44.9 72.8c-11 10.4-25.4 15.5-44.4 15.5H90.3c-19 0-33.4-5-44.4-15.5C35.2 456.3 30 442.4 30 424c0-9.5.3-19 1-28.1A272.9 272.9 0 0141.7 338a131 131 0 0110.9-24.7A84.8 84.8 0 0167.4 294a59 59 0 0119.3-12 69 69 0 0123.6-4.5c1 .5 3 1.6 6 3.6l21 13.6c9 5.6 20.4 10.7 34 15.1a137.3 137.3 0 0084.5 0c13.7-4.4 25.1-9.5 34-15.1a2721 2721 0 0027-17.2 69 69 0 0123.7 4.5 59 59 0 0119.2 12 84.5 84.5 0 0114.9 19.4c4.5 8 8.2 16.3 10.8 24.7a275.2 275.2 0 0110.8 57.8c.6 9 1 18.5 1 28.1 0 18.5-5.3 32.4-16 42.6zm0 0" />
+                </svg>
+              </Link>
+            </div>
+
             <div
               style={{ marginTop: "40px", marginBottom: "40px" }}
               onClick={() => {
                 setDark(!dark);
                 if (!dark) {
                   dispatch({ type: "DARK" });
-                  console.log("Dark");
                 } else {
                   dispatch({ type: "LIGHT" });
-                  console.log("Light");
                 }
               }}
             >
@@ -849,11 +654,108 @@ const AdminDashboardComponent = () => {
             </button>
           </div>
           <div class="main-container">
+            <div class="header">
+              {navopen ? (
+                <></>
+              ) : (
+                <img
+                  className="menu"
+                  src={menu}
+                  style={{ cursor: "pointer", marginRight: "12px" }}
+                  onClick={() => {
+                    setNavopen(true);
+                  }}
+                />
+              )}
+              <div class="logo1">
+                <img class="logoimg" src={darkMode ? logo1 : logo} />
+              </div>
+
+              <div class="user-info">
+                {(localStorage.getItem("role") == "Associate Practice Lead" ||
+                  localStorage.getItem("role") == "Practice Lead") && (
+                  <Link
+                    to="/approve"
+                    style={{ textDecoration: "none" }}
+                    class="cards-button button"
+                  >
+                    <svg
+                      fill="currentColor"
+                      id="Layer_1"
+                      version="1.1"
+                      viewBox="0 0 512 512"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <g>
+                        <path d="M381.7,225.9c0-97.6-52.5-130.8-101.6-138.2c0-0.5,0.1-1,0.1-1.6c0-12.3-10.9-22.1-24.2-22.1c-13.3,0-23.8,9.8-23.8,22.1   c0,0.6,0,1.1,0.1,1.6c-49.2,7.5-102,40.8-102,138.4c0,113.8-28.3,126-66.3,158h384C410.2,352,381.7,339.7,381.7,225.9z" />
+                        <path d="M256.2,448c26.8,0,48.8-19.9,51.7-43H204.5C207.3,428.1,229.4,448,256.2,448z" />
+                      </g>
+                    </svg>
+                    {arabic ? (
+                      <p class="Ptag" style={{ marginBottom: "auto" }}>
+                        الموافقات المعلقة
+                      </p>
+                    ) : (
+                      <p class="Ptag" style={{ marginBottom: "auto" }}>
+                        Pending Approvals
+                      </p>
+                    )}
+                  </Link>
+                )}
+                <Link
+                  to="/request"
+                  style={{ textDecoration: "none" }}
+                  class="cards-button button"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="feather feather-plus"
+                  >
+                    <path d="M12 5v14M5 12h14" />
+                  </svg>
+                  {arabic ? (
+                    <p class="Ptag" style={{ marginBottom: "auto" }}>
+                      خلق جديد إبداع جديد
+                    </p>
+                  ) : (
+                    <p class="Ptag" style={{ marginBottom: "auto" }}>
+                      Create New
+                    </p>
+                  )}
+                </Link>
+
+                {arabic ? (
+                  <div class="hour" style={{ direction: "rtl" }}>
+                    {" "}
+                    {arabic ? (ampm == "am" ? "صباحًا" : "مساءً") : ampm}{" "}
+                    {strTime}{" "}
+                  </div>
+                ) : (
+                  <div class="hour">
+                    {strTime}{" "}
+                    {arabic ? (ampm == "am" ? "صباحًا" : "مساءً") : ampm}
+                  </div>
+                )}
+              </div>
+            </div>
             <div class="user-box first-box">
-              <div
-                class="cards-wrapper"
-                style={{ animationDelay: ".6s", width: "100%" }}
-              >
+              <div class="cards-wrapper" style={{ animationDelay: ".6s" }}>
+                {/* <div class="cards-header">
+        <div class="cards-header-date">
+         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-left">
+          <path d="M15 18l-6-6 6-6" /></svg>
+         <div class="title"> {
+           arabic?"ملخص":"Summary"
+         } </div>
+         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right">
+          <path d="M9 18l6-6-6-6" /></svg>
+        </div>
+       </div> */}
                 <div class="cards card" style={{ border: "none" }}>
                   <div class="destination">
                     <div id="container">
@@ -983,21 +885,31 @@ const AdminDashboardComponent = () => {
                   </div>
                 </div>
               </div>
+              <div class="account-wrapper" style={{ animationDelay: ".8s" }}>
+                <div class="account-profile">
+                  <img src={user} alt="" />
+                  <div class="blob-wrap">
+                    <div class="blob"></div>
+                    <div class="blob"></div>
+                    <div class="blob"></div>
+                  </div>
+                  <div class="account-name">{localStorage.getItem("name")}</div>
+                  <div class="account-title">
+                    {localStorage.getItem("role")}
+                  </div>
+                </div>
+                {/* <div class={arabic?"account account-arabic card":"account card"} style={arabic?{alignItems: "flex-end"}:{}}>
+        <div className="account-cash" >{curr} {total}</div>
+        <div class="account-income">
+         {
+           arabic?"إجمالي المطالبة":"Total Claim"
+         }
+        </div>
+       </div> */}
+              </div>
             </div>
             <div class="user-box second-box" style={{ marginTop: "0px" }}>
-              <div
-                class="cards-header"
-                style={{ width: "-webkit-fill-available" }}
-              >
-                <div class="cards-header-date">
-                  <div class="title">Pending Approval</div>
-                </div>
-              </div>
-
-              <div
-                class="cards-wrapper"
-                style={{ animationDelay: "1s", marginRight: "10px" }}
-              >
+              <div class="cards-wrapper" style={{ animationDelay: "1s" }}>
                 <div class="cards card">
                   <table
                     class="table"
@@ -1012,9 +924,10 @@ const AdminDashboardComponent = () => {
                         <th>
                           {arabic ? "المبلغ المطلوب" : "Amount requested"}
                         </th>
-
+                        <th>{arabic ? "الموافقون" : "Approvers"}</th>
                         <th>
-                          {arabic ? "عملة" : "Currency"}
+                          {arabic ? "عملة" : "Currency "}
+                          {"  "}
                           <select
                             style={{
                               border: "none",
@@ -1036,6 +949,7 @@ const AdminDashboardComponent = () => {
                             <option value="﷼">﷼ SAR</option>
                           </select>
                         </th>
+                        <th>{arabic ? "حالة" : "Status"}</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -1047,18 +961,29 @@ const AdminDashboardComponent = () => {
                         : mainData
                       ).map((item, index) => {
                         let temp = {
-                          category: "",
-                          invono: "",
-                          submittedDate: "",
-                          invoiceDate: "",
-                          address: "",
-                          total: "",
-                          headers: [],
-                          values: [],
-                          subtotal: "",
-                          taxamount: "",
-                          tax: "",
+                          company_name: "",
+                          from_address: "",
+                          to_address: "",
+                          invoice_date: "",
+                          due_date: "",
+                          phone_number: "",
+                          invoice_number: "",
                           currency: "",
+                          total: "",
+                          sub_total: "",
+                          tax: "",
+                          discount: "",
+                          barcode: "",
+                          category: "",
+                          logo: "",
+                          bill_of_materials: [
+                            {
+                              description: [""],
+                              quantity: [""],
+                              unit_price: [""],
+                              price: [""],
+                            },
+                          ],
                         };
                         try {
                           temp = JSON.parse(item.data);
@@ -1086,9 +1011,9 @@ const AdminDashboardComponent = () => {
                             total: "",
                             sub_total: "",
                             tax: "",
-                            category: "",
                             discount: "",
                             barcode: "",
+                            category: "",
                             logo: "",
                             bill_of_materials: [
                               {
@@ -1110,13 +1035,8 @@ const AdminDashboardComponent = () => {
                                   border: "none",
                                   background: "transparent",
                                 }}
-                                onClick={async () => {
+                                onClick={() => {
                                   let temp1 = item;
-                                  temp1.data = temp;
-                                  handleShow();
-                                  let cord1 = await coor(temp1.data.address);
-                                  setCord(cord1);
-                                  console.log(cord1);
                                   temp1.data = temp;
                                   temp1.data.currency = mainCurr;
                                   temp1.data.sub_total = currencyCon(
@@ -1137,6 +1057,7 @@ const AdminDashboardComponent = () => {
                                         return currencyCon(it);
                                       }
                                     );
+                                  handleShow();
                                   setTabdata(temp1);
                                 }}
                               >
@@ -1147,8 +1068,161 @@ const AdminDashboardComponent = () => {
                             <td>{it.submitted}</td>
                             <td>{temp.category}</td>
                             <td>{currencyCon(temp.total)}</td>
-
+                            <td>
+                              {" "}
+                              {!(
+                                localStorage.getItem("role") ==
+                                "Associate Practice Lead"
+                              ) &&
+                                !(
+                                  localStorage.getItem("role") ==
+                                  "Practice Lead"
+                                ) && (
+                                  <OverlayTrigger
+                                    placement="top"
+                                    popperConfig={{
+                                      modifiers: {
+                                        preventOverflow: {
+                                          enabled: false,
+                                        },
+                                      },
+                                    }}
+                                    delay={{ show: 950, hide: 900 }}
+                                    overlay={
+                                      <Tooltip id="button-tooltip">
+                                        {apl} <br />
+                                        Associate practice Lead :
+                                        {localStorage.getItem("dept")} <br />
+                                        Level 1
+                                      </Tooltip>
+                                    }
+                                  >
+                                    <img
+                                      style={{ transition: "1s" }}
+                                      class="profile-img"
+                                      src={level1}
+                                      alt=""
+                                    />
+                                  </OverlayTrigger>
+                                )}
+                              {!(
+                                localStorage.getItem("role") == "Practice Lead"
+                              ) && (
+                                <OverlayTrigger
+                                  placement="top"
+                                  popperConfig={{
+                                    modifiers: {
+                                      preventOverflow: {
+                                        enabled: false,
+                                      },
+                                    },
+                                  }}
+                                  delay={{ show: 950, hide: 900 }}
+                                  overlay={
+                                    <Tooltip id="button-tooltip">
+                                      {pl} <br />
+                                      Practice Lead :
+                                      {localStorage.getItem("dept")}
+                                      <br />
+                                      Level 2
+                                    </Tooltip>
+                                  }
+                                >
+                                  <img
+                                    style={{ transition: "1s" }}
+                                    class="profile-img"
+                                    src={level2}
+                                    alt=""
+                                  />
+                                </OverlayTrigger>
+                              )}
+                              {
+                                <OverlayTrigger
+                                  placement="top"
+                                  popperConfig={{
+                                    modifiers: {
+                                      preventOverflow: {
+                                        enabled: false,
+                                      },
+                                    },
+                                  }}
+                                  delay={{ show: 950, hide: 900 }}
+                                  overlay={
+                                    <Tooltip id="button-tooltip">
+                                      {ph}
+                                      <br />
+                                      Practice Head :
+                                      {localStorage.getItem("dept")}
+                                      <br />
+                                      Level 3
+                                    </Tooltip>
+                                  }
+                                >
+                                  <img
+                                    style={{ transition: "1s" }}
+                                    class="profile-img"
+                                    src={level3}
+                                    alt=""
+                                  />
+                                </OverlayTrigger>
+                              }
+                            </td>
                             <td>{mainCurr}</td>
+                            <td>
+                              {it.status == "waiting" ? (
+                                <div
+                                  className={
+                                    arabic
+                                      ? "status is-wait is-wait-arabic"
+                                      : "status is-wait"
+                                  }
+                                >
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="24"
+                                    height="24"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    class="feather feather-loader"
+                                  >
+                                    <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
+                                  </svg>
+                                  {arabic ? "انتظار" : "Waiting"}
+                                </div>
+                              ) : it.status == "accepted" ? (
+                                <div class="status is-green">
+                                  <svg
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                  >
+                                    <path d="M20 6L9 17l-5-5" />
+                                  </svg>
+                                  {arabic ? "وافقت" : "Accepted"}
+                                </div>
+                              ) : (
+                                <div class="status is-red">
+                                  <svg
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                  >
+                                    <path d="M18 6L6 18M6 6l12 12" />
+                                  </svg>
+                                  {arabic ? "مرفوض" : "Rejected"}
+                                </div>
+                              )}
+                            </td>
                           </tr>
                         );
                       })}
@@ -1192,6 +1266,7 @@ const AdminDashboardComponent = () => {
           </div>
         </div>
       )}
+
       <Modal
         size="lg"
         aria-labelledby="contained-modal-title-vcenter"
@@ -1220,44 +1295,11 @@ const AdminDashboardComponent = () => {
                 }
           }
         >
-          <AccempComponent
-            finalData={tabdata.data}
-            sdate={tabdata.submitted}
-            name={tabdata.name}
-            role={tabdata.role}
-          />
+          <AccempComponent finalData={tabdata.data} sdate={tabdata.submitted} />
         </Modal.Body>
-        <Modal.Footer>
-          <div class="" style={{ display: "flex", justifyContent: "center" }}>
-            <div class="form-group" style={{ margin: "5px" }}>
-              <input
-                type="submit"
-                value="Approve"
-                class="btn btn-primary"
-                onClick={(event) => {
-                  event.preventDefault();
-                  approve(tabdata);
-                }}
-              />
-              <div class="submitting"></div>
-            </div>
-            <div class="form-group" style={{ margin: "5px" }}>
-              <input
-                type="submit"
-                value="Reject"
-                class="btn btn-primary"
-                onClick={(event) => {
-                  event.preventDefault();
-                  reject(tabdata);
-                }}
-              />
-              <div class="submitting"></div>
-            </div>
-          </div>
-        </Modal.Footer>
       </Modal>
     </div>
   );
 };
 
-export default AdminDashboardComponent;
+export default DashboardComponent;

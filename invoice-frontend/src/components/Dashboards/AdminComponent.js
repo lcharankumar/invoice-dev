@@ -1,30 +1,31 @@
 import React, { useState, useEffect, useRef } from "react";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
-import "../style/dashboard.scss";
-import user from "../img/user.png";
+import "../../style/dashboard.scss";
+import user from "../../img/user.png";
 import { Link, useNavigate } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import axios, * as others from "axios";
-import menu from "../img/menu (1).png";
-import level1 from "../img/level1.png";
-import level2 from "../img/level2.png";
-import level3 from "../img/level3.png";
-import "../style/form.scss";
-import "../style/admin.scss";
-import "../style/admin.sass";
-import "../style/alert.scss";
-import logo from "../img/Digiverz.png";
-import logo1 from "../img/Digiverz_dark.png";
-import logo3 from "../img/level3.png";
-import reject from "../img/reject.png";
-import HomeLoaderComponent from "./HomeLoaderComponent";
-import { DarkModeContext } from "../context/darkModeContext";
-import { ArabicContext } from "../context/arabicContext";
+import menu from "../../img/menu (1).png";
+import level1 from "../../img/level1.png";
+import level2 from "../../img/level2.png";
+import level3 from "../../img/level3.png";
+import "../../style/form.scss";
+import "../../style/admin.scss";
+import "../../style/admin.sass";
+import "../../style/alert.scss";
+import logo from "../../img/Digiverz.png";
+import logo1 from "../../img/Digiverz_dark.png";
+import logo3 from "../../img/level3.png";
+import reject from "../../img/reject.png";
+import HomeLoaderComponent from "../HomeLoaderComponent";
+import { DarkModeContext } from "../../context/darkModeContext";
+import { ArabicContext } from "../../context/arabicContext";
 import { useContext } from "react";
 import Offcanvas from "react-bootstrap/Offcanvas";
-
+import Toast from "react-bootstrap/Toast";
+import AddDeptComponent from "./AddDeptComponent";
 import AddemployeeComponent from "./AddemployeeComponent";
 
 import { styled } from "@mui/system";
@@ -33,6 +34,7 @@ import TablePaginationUnstyled, {
 } from "@mui/base/TablePaginationUnstyled";
 
 import $ from "jquery";
+import EditempComponent from "./EditempComponent";
 
 const AdminComponent = () => {
   const { darkMode } = useContext(DarkModeContext);
@@ -40,7 +42,10 @@ const AdminComponent = () => {
   const { dispatch } = useContext(DarkModeContext);
   const { dispatch1 } = useContext(ArabicContext);
   const [loading, setLoading] = useState(true);
+  const [showdept, setshowDept] = useState(false);
   const [delid, setDelid] = useState("");
+  const [showToast, setShowToast] = useState(false);
+  const [totalEmp, setTotalEmp] = useState(0);
   const [mainData, setMainData] = useState([
     {
       uid: "",
@@ -49,7 +54,10 @@ const AdminComponent = () => {
       dept: "",
     },
   ]);
+
   const [dept, setDept] = useState([]);
+  const [selectedDept, setselectedDept] = useState("digiverz");
+
   const [seldept, setSeldept] = useState([
     {
       uid: "",
@@ -148,7 +156,7 @@ const AdminComponent = () => {
     password: "",
   });
   useEffect(() => {
-    formData = new FormData();
+    let formData = new FormData();
     formData.append("token", localStorage.getItem("token"));
     if (mainData.length > 2) {
       let temp = [];
@@ -180,10 +188,18 @@ const AdminComponent = () => {
         },
       ],
     };
+    let res1 = {
+      data: [
+        {
+          total: "",
+        },
+      ],
+    };
     res = await axios.post("http://172.17.19.26:5000/getallemp", formData);
-    setMainData(res.data);
+    res1 = await axios.post("http://172.17.19.26:5000/totalemp", formData);
 
-    console.log(res);
+    setMainData(res.data);
+    setTotalEmp(parseInt(res1.data[0].total));
   }
   async function fetchData1() {
     let res = {
@@ -194,9 +210,9 @@ const AdminComponent = () => {
       ],
     };
     res = await axios.post("http://172.17.19.26:5000/getalldept", formData);
+
     setDept(res.data[0].dept);
 
-    console.log("res1", res);
     setLoading(false);
   }
   useEffect(() => {
@@ -217,6 +233,7 @@ const AdminComponent = () => {
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+  const [editEmp, setEditemp] = useState(false);
 
   useEffect(() => {
     $(".card1").removeClass("active");
@@ -236,14 +253,12 @@ const AdminComponent = () => {
       let fi = "";
 
       li1.map((itm, index) => {
-        console.log(fi);
         if (itm == "of") {
           fi = fi + "من" + " ";
         } else {
           fi = fi + itm + " ";
         }
       });
-      console.log("Text=", fi);
       $(".MuiTablePagination-displayedRows").text(fi);
     }
   }, [arabic, page, darkMode, navopen]);
@@ -264,60 +279,155 @@ const AdminComponent = () => {
     });
 
     setSeldept(temp);
+
     setSeldepthead(temp1);
   };
 
-  const submitHandler = async (event) => {
-    event.preventDefault();
+  const editEmployeefun = async (obj) => {
     setShow(false);
     setLoading(true);
-    console.log(formData);
-    const formData1 = new FormData();
-    formData1.append("name", formData.name);
-    formData1.append("uid", curremp.uid);
-    formData1.append("password", formData.password);
-    formData1.append("role", curremp.role);
-    formData1.append("dept", curremp.dept);
-    formData1.append("token", localStorage.getItem("token"));
-    let res = {
-      data: {
-        message: "Failure",
-        token: "",
-      },
-    };
-    console.log(formData1);
-    try {
-      res = await axios.post("http://172.17.19.26:5000/register", formData1);
-      console.log(res);
-      fetchData();
-      fetchData1();
-      setLoading(false);
-      $(".card1").removeClass("active");
-      $(".menu-item").removeClass("active");
-    } catch (error) {
-      window.alert("Server Error");
+    if (obj.role == "Employee") {
+      let nuid = "";
+      let deptlen = 0;
+      let deptid = 0;
+      mainData.map((itms) => {
+        if (itms.dept == obj.dept) {
+          deptlen = deptlen + 1;
+        }
+      });
+      dept.map((itms, index) => {
+        if (itms == obj.dept) {
+          deptid = index;
+        }
+      });
+      const formData1 = new FormData();
+      formData1.append("uid", obj.uid);
+      formData1.append("nuid", "emp" + deptid + "0" + (totalEmp + 1));
+      formData1.append("name", obj.name);
+      formData1.append("role", obj.role);
+      formData1.append("dept", obj.dept);
+      formData1.append("token", localStorage.getItem("token"));
+      const formData2 = new FormData();
+      formData2.append("total", totalEmp + 1);
+      formData2.append("token", localStorage.getItem("token"));
+      let res = {
+        data: {
+          message: "Failure",
+          token: "",
+        },
+      };
+      try {
+        res = await axios.post("http://172.17.19.26:5000/regrade", formData1);
+        res = await axios.post("http://172.17.19.26:5000/addtotal", formData2);
+        fetchData();
+        fetchData1();
+        setLoading(false);
+        $(".card1").removeClass("active");
+        $(".menu-item").removeClass("active");
+      } catch (error) {
+        window.alert("Server Error");
+      }
+    } else {
+      let nuid = "";
+      let deptlen = 0;
+      let deptid = 0;
+      mainData.map((itms) => {
+        if (itms.dept == obj.dept && itms.role == obj.role) {
+          nuid = itms.uid;
+        }
+        if (itms.dept == obj.dept) {
+          deptlen = deptlen + 1;
+        }
+      });
+      dept.map((itms, index) => {
+        if (itms == obj.dept) {
+          deptid = index;
+        }
+      });
+      const formData2 = new FormData();
+      formData2.append("uid", nuid);
+      formData2.append("nuid", "emp" + deptid + "0" + (totalEmp + 1));
+      formData2.append("token", localStorage.getItem("token"));
+      const formData1 = new FormData();
+      formData1.append("uid", obj.uid);
+      if (!nuid) {
+        if (obj.role == "Practice Lead") {
+          formData1.append("nuid", `ad${deptid}02`);
+        }
+        if (obj.role == "Practice head") {
+          formData1.append("nuid", `ad${deptid}01`);
+        }
+        if (obj.role == "Associate Practice Lead") {
+          formData1.append("nuid", `ad${deptid}03`);
+        }
+      } else {
+        formData1.append("nuid", nuid);
+      }
+      formData1.append("name", obj.name);
+      formData1.append("role", obj.role);
+      formData1.append("dept", obj.dept);
+      formData1.append("token", localStorage.getItem("token"));
+
+      let res = {
+        data: {
+          message: "Failure",
+          token: "",
+        },
+      };
+      let res1 = {
+        data: {
+          message: "Failure",
+          token: "",
+        },
+      };
+      const formData3 = new FormData();
+      formData3.append("total", totalEmp + 1);
+      formData3.append("token", localStorage.getItem("token"));
+      try {
+        if (nuid) {
+          res1 = await axios.post(
+            "http://172.17.19.26:5000/makeemp",
+            formData2
+          );
+          res1 = await axios.post(
+            "http://172.17.19.26:5000/addtotal",
+            formData3
+          );
+        }
+
+        res = await axios.post("http://172.17.19.26:5000/regrade", formData1);
+        fetchData();
+        fetchData1();
+        setLoading(false);
+        $(".card1").removeClass("active");
+        $(".menu-item").removeClass("active");
+      } catch (error) {
+        window.alert("Server Error");
+      }
     }
   };
   const addEmpfun = async (obj) => {
     setLoading(true);
-    console.log(obj);
     const formData1 = new FormData();
     formData1.append("name", obj.name);
     formData1.append("uid", obj.uid);
+
     formData1.append("password", obj.password);
     formData1.append("role", obj.role);
     formData1.append("dept", obj.dept);
     formData1.append("token", localStorage.getItem("token"));
+    const formData2 = new FormData();
+    formData2.append("total", totalEmp + 1);
+    formData2.append("token", localStorage.getItem("token"));
     let res = {
       data: {
         message: "Failure",
         token: "",
       },
     };
-    console.log(formData1);
     try {
       res = await axios.post("http://172.17.19.26:5000/register", formData1);
-      console.log(res);
+      res = await axios.post("http://172.17.19.26:5000/addtotal", formData2);
       fetchData();
       fetchData1();
       setLoading(false);
@@ -332,7 +442,7 @@ const AdminComponent = () => {
     setLoading(true);
     const formData = new FormData();
     formData.append("token", localStorage.getItem("token"));
-    formData.append("uid", delid);
+    formData.append("uid", curremp.uid);
 
     try {
       let res = {
@@ -345,7 +455,6 @@ const AdminComponent = () => {
       // const timer = setTimeout(() => {
       //   setAlert(false);
       // }, 4000);
-      console.log(res);
     } catch (error) {
       window.alert("Some thing went wrong please try again");
       console.log(error);
@@ -354,139 +463,51 @@ const AdminComponent = () => {
     fetchData();
     fetchData1();
   };
+  const addDept = async (str) => {
+    setLoading(true);
+    let dept1 = new FormData();
+    let t = dept;
+    let l = dept.length;
+    t.push(str.deptname);
+    dept1.append("dept", t);
+    dept1.append("token", localStorage.getItem("token"));
+
+    try {
+      let res = await axios.post("http://172.17.19.26:5000/adddept", dept1);
+
+      setLoading(false);
+      fetchData();
+      fetchData1();
+    } catch (error) {
+      window.alert("Some thing went wrong please try again");
+    }
+  };
   return (
     <div className=" dashboard Admin ">
+      {editEmp && (
+        <EditempComponent
+          setEditemp={setEditemp}
+          curremp={curremp}
+          addEmpfun={addEmpfun}
+          delEmp={delEmp}
+          dept={dept}
+          editEmployeefun={editEmployeefun}
+        ></EditempComponent>
+      )}
       {addemp && (
         <AddemployeeComponent
           setAddemp={setAddemp}
           curremp={{
-            dept: seldept[0].dept,
+            dept: selectedDept,
             role: "Employee",
-            uid: "emp" + index1 + "0" + (seldept.length + 1),
+            uid: "emp" + index1 + "0" + (totalEmp + 1),
           }}
           addEmpfun={addEmpfun}
         />
       )}
-      <Offcanvas show={show1} onHide={handleClose1} placement="top">
-        <Offcanvas.Body style={{ background: "#000e29" }}>
-          <section className="alertss">
-            <div class="container mt-5">
-              <div class="row">
-                <div class="col-sm-12">
-                  <div
-                    class="alert fade alert-simple alert-warning alert-dismissible text-left font__family-montserrat font__size-16 font__weight-light brk-library-rendered rendered show"
-                    role="alert"
-                    data-brk-library="component__alert"
-                  >
-                    <iconify-icon
-                      class="close fa-times"
-                      icon="ic:round-warning-amber"
-                      style={{ fontSize: "38px", marginBottom: "-8px" }}
-                    ></iconify-icon>
-                    {"  "}
-                    <p style={{ marginTop: "auto", marginBottom: "auto" }}>
-                      {" "}
-                      <strong class="font__weight-semibold">
-                        Warning ! {"  "}
-                      </strong>{" "}
-                      You are trying to remove this employee
-                    </p>
-                    <button
-                      type="button"
-                      class="one font__size-18"
-                      data-dismiss="alert"
-                      onClick={() => delEmp()}
-                    >
-                      <span class="sr-only">Confirm</span>
-                    </button>
-                    <div>
-                      <iconify-icon
-                        class="start-icon  animated "
-                        onClick={handleClose1}
-                        icon="mdi:progress-close"
-                        style={{ marginBottom: "-8px" }}
-                      ></iconify-icon>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-        </Offcanvas.Body>
-      </Offcanvas>
-      <Modal
-        show={show}
-        onHide={handleClose}
-        style={{ background: "transparent", minWidth: "100vw" }}
-      >
-        <Modal.Body>
-          <div
-            className="wrapper1"
-            style={{ boxShadow: "none", width: "auto" }}
-          >
-            <iconify-icon
-              icon="mdi:close-box-multiple"
-              style={{
-                float: "right",
-                color: "black",
-                cursor: "pointer",
-                fontSize: "22px",
-              }}
-              onClick={handleClose}
-            ></iconify-icon>
-            <div className="logo">
-              <h5
-                style={{
-                  fontSize: "13px",
-                  textAlign: "center",
-                  justifyContent: "center",
-                }}
-              >
-                {curremp.dept}
-              </h5>
-            </div>
-            <div className="text-center mt-4 name">
-              <span style={{ color: "black" }}>{curremp.role}</span>
-              <br />
-
-              <span style={{ color: "black" }}>UID: {curremp.uid}</span>
-            </div>
-            <form className="p-3 mt-3" onSubmit={submitHandler}>
-              <div className="form-field d-flex align-items-center">
-                <span className="far fa-user"></span>
-                <input
-                  type="text"
-                  name="userName"
-                  value={formData.name}
-                  onChange={(e) =>
-                    setFormData({ ...formData, name: e.target.value })
-                  }
-                  id="userName"
-                  placeholder="Username"
-                  required={true}
-                />
-              </div>
-              <div className="form-field d-flex align-items-center">
-                <span className="fas fa-key"></span>
-                <input
-                  type="password"
-                  value={formData.password}
-                  onChange={(e) =>
-                    setFormData({ ...formData, password: e.target.value })
-                  }
-                  name="password"
-                  id="pwd"
-                  placeholder="Password"
-                  required={true}
-                />
-              </div>
-              <button className="btn mt-3" type="submit" value="Register">
-                Update
-              </button>
-            </form>
-          </div>
-        </Modal.Body>
-      </Modal>
+      {showdept && (
+        <AddDeptComponent setshowDept={setshowDept} addDept={addDept} />
+      )}
 
       {loading ? (
         <HomeLoaderComponent></HomeLoaderComponent>
@@ -506,10 +527,8 @@ const AdminComponent = () => {
                 setDark(!dark);
                 if (!dark) {
                   dispatch({ type: "DARK" });
-                  console.log("Dark");
                 } else {
                   dispatch({ type: "LIGHT" });
-                  console.log("Light");
                 }
               }}
             >
@@ -643,6 +662,7 @@ const AdminComponent = () => {
                                     $(".card1").removeClass("active");
                                     selectDept(itms);
                                     setIndex(index);
+                                    setselectedDept(itms);
                                   }}
                                 >
                                   <span class="icon">o</span>
@@ -651,13 +671,33 @@ const AdminComponent = () => {
                               );
                             })}
                           </ul>
+                          <div
+                            class="icon3"
+                            onClick={() => {
+                              setshowDept(true);
+                            }}
+                          >
+                            <div
+                              class="icon__home"
+                              style={{
+                                height: "48px",
+                                width: "48px",
+                                marginBottom: "10px",
+                              }}
+                            >
+                              <iconify-icon
+                                class="close fa-times"
+                                icon="ic:baseline-plus"
+                              ></iconify-icon>
+                            </div>
+                          </div>
                         </nav>
                       </div>
                       <div class="screen list-view">
                         <header>
                           <div class="icon menu">o</div>
                           <h1 class="uppercase" style={{ fontSize: "1rem" }}>
-                            Employees
+                            {arabic ? "الموظفين" : "Employees"}
                           </h1>
                           <div class="icon search">o</div>
                         </header>
@@ -669,9 +709,16 @@ const AdminComponent = () => {
                                 <li className="list-item">
                                   <div
                                     class="regrade uppercase"
-                                    onClick={handleShow}
+                                    onClick={() => {
+                                      setEditemp(true);
+                                      $(".card1").removeClass("active");
+                                    }}
+                                    style={{ fontSize: "12px" }}
                                   >
-                                    Regrade
+                                    <iconify-icon
+                                      icon="material-symbols:edit-note-rounded"
+                                      style={{ fontSize: "28px" }}
+                                    ></iconify-icon>
                                   </div>
                                   <div
                                     className={"card1 card1" + index}
@@ -689,7 +736,10 @@ const AdminComponent = () => {
                                     <div class="thumbnail">
                                       <img src={logo3} />
                                     </div>
-                                    <div class="details">
+                                    <div
+                                      class="details"
+                                      style={{ fontSize: "12px" }}
+                                    >
                                       <h2 class="name">{itms.name}</h2>
                                       <p class="teacher">{itms.role}</p>
                                     </div>
@@ -704,7 +754,6 @@ const AdminComponent = () => {
                                 class="regrade uppercase"
                                 onClick={() => {
                                   setAddemp(true);
-                                  console.log(addemp);
                                 }}
                               >
                                 <svg
@@ -730,8 +779,17 @@ const AdminComponent = () => {
                                   <img src={logo3} />
                                 </div>
                                 <div class="details">
-                                  <h2 class="name">Total Employees</h2>
-                                  <p class="teacher">{seldept.length}</p>
+                                  <h2 class="name">
+                                    {arabic ? "عدد الموظفي" : "Total Employees"}
+                                  </h2>
+                                  <p
+                                    class="teacher"
+                                    style={{
+                                      fontSize: "13px",
+                                    }}
+                                  >
+                                    {seldept.length}
+                                  </p>
                                 </div>
                               </div>
                             </li>
@@ -774,11 +832,11 @@ const AdminComponent = () => {
                   >
                     <thead>
                       <tr>
-                        <th>{arabic ? "شفرة" : "UID"}</th>
-                        <th>{arabic ? "تاريخ" : "Name"} </th>
-                        <th>{arabic ? "مطالبة التسليم" : "Role"} </th>
-                        <th>{arabic ? "المبلغ المطلوب" : "Department"}</th>
-                        <th>{arabic ? " مسح المستخدم" : "Delete"}</th>
+                        <th>{arabic ? "هوية شخصية" : "UID"}</th>
+                        <th>{arabic ? "اسم" : "Name"} </th>
+                        <th>{arabic ? "دور" : "Role"} </th>
+                        <th>{arabic ? "قسم" : "Department"}</th>
+                        <th>{arabic ? "تعديل" : "Edit"}</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -823,19 +881,18 @@ const AdminComponent = () => {
                             <td>{it.dept}</td>
                             <td
                               onClick={() => {
-                                handleShow1();
-                                setDelid(it.uid);
+                                setCurremp(it);
+                                setEditemp(true);
                               }}
                             >
                               <div
                                 class="status is-red"
                                 style={{ cursor: "pointer" }}
                               >
-                                <img
-                                  src={reject}
-                                  alt=""
-                                  style={{ height: "25px" }}
-                                />
+                                <iconify-icon
+                                  icon="material-symbols:edit-note-rounded"
+                                  style={{ fontSize: "28px" }}
+                                ></iconify-icon>
                               </div>
                             </td>
                           </tr>

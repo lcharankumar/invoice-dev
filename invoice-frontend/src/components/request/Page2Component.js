@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { TestData } from "../data";
-import { TestData2 } from "../data";
-import { TestData3 } from "../data";
+import { TestData } from "../../data";
+import { TestData2 } from "../../data";
+import { TestData3 } from "../../data";
 import SpinnerComponent from "./SpinnerComponent";
-import original from "../img/original.png";
-import img1 from "../img/img1.png";
-import img2 from "../img/img2.png";
+import original from "../../img/original.png";
+import img1 from "../../img/img1.png";
+import img2 from "../../img/img2.png";
 import ZoomComponent from "./ZoomComponent";
 import TableComponent from "./TableComponent";
 import Dropdown from "react-bootstrap/Dropdown";
@@ -22,8 +22,8 @@ import ImageCropper from "./ImageCropperComponent";
 import RectangleComponent from "./RectangleComponent";
 import { Link } from "react-router-dom";
 
-import { ArabicContext } from "../context/arabicContext";
-import { DarkModeContext } from "../context/darkModeContext";
+import { ArabicContext } from "../../context/arabicContext";
+import { DarkModeContext } from "../../context/darkModeContext";
 
 import { useContext } from "react";
 import { color } from "@mui/system";
@@ -219,16 +219,12 @@ const Page2Component = (props) => {
   };
 
   const predictlabel = async (event) => {
-    console.log("Heellooo");
     setSpin(true);
-    console.log(props.file);
     event.preventDefault();
-    console.log(img);
     const formData1 = new FormData();
     formData1.append("file_input", props.file);
     formData1.append("lang_input", props.lang);
     formData1.append("token", localStorage.getItem("token"));
-    console.log("Lang", props.lang);
 
     let res = {
       data: {
@@ -278,10 +274,7 @@ const Page2Component = (props) => {
     // image.src = `data:image/png;base64,${res.data.image}`;
     // res.data.image = image;------
 
-    console.log("RES", res);
-
     setDat(dat + 1);
-    console.log(dat);
     event.preventDefault();
 
     setImg(props.org);
@@ -294,15 +287,7 @@ const Page2Component = (props) => {
     setPredicted(false);
   };
 
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
   const sumSub = () => {
-    console.log(
-      parseInt((parseFloat(data.sub_total) / 100) * parseFloat(data.tax)) +
-        parseFloat(data.sub_total),
-      parseInt(data.total)
-    );
     let s = 0;
     data.bill_of_materials[0].price.map((itms) => {
       s = s + parseInt(itms);
@@ -314,7 +299,6 @@ const Page2Component = (props) => {
 
     handleClose();
     setSpin(true);
-    console.log("Helll", crop);
     var arr = crop.split(","),
       mime = arr[0].match(/:(.*?);/)[1],
       bstr = atob(arr[1]),
@@ -329,19 +313,11 @@ const Page2Component = (props) => {
     var image = new Image();
     image.src = crop;
     //let im = URL.createObjectURL(crop);
-    console.log("Imageee", imageFile1);
     const formData2 = new FormData();
     formData2.append("file_input", imageFile1);
     formData2.append("label_input", label1[edit]);
     formData2.append("token", localStorage.getItem("token"));
-    // var reader = new FileReader();
-    // reader.readAsDataURL(image);
-    // reader.onloadend = function() {
-    //   var base64data = reader.result;
-    //   console.log("Base64",crop);
-    // }
-    console.log("BBBB");
-    console.log(crop);
+
     let res = { data: "" };
     if (edit === 13) {
       res = {
@@ -363,12 +339,10 @@ const Page2Component = (props) => {
     } catch (error) {
       window.alert("Some thing went wrong please try again");
     }
-    console.log("Cropped", res);
 
     const txt = res.data;
     //const txt = "26/09/2022"
     setExtract(txt);
-    console.log(res.data);
     if (edit == 0) {
       let temp = data;
       temp.company_name = txt;
@@ -534,7 +508,6 @@ const Page2Component = (props) => {
   const handleClose = () => setShow(false);
   const add = (text) => {
     const myArray = text.split("\n");
-    console.log(myArray);
     return (
       <>
         {myArray.map((str, index) => {
@@ -568,7 +541,6 @@ const Page2Component = (props) => {
   };
   const add1 = (text) => {
     const myArray = text.split("\n");
-    console.log(myArray);
     return (
       <>
         {myArray.map((str, index) => {
@@ -1059,13 +1031,11 @@ const Page2Component = (props) => {
                                           let temp = data;
                                           temp.company_name = " ";
                                           setData(temp);
-                                          console.log(temp.company_name);
                                         } else {
                                           let temp = data;
                                           temp.company_name =
                                             event.target.value;
                                           setData(temp);
-                                          console.log(temp.company_name);
                                         }
                                       }}
                                       readOnly={
@@ -1088,9 +1058,7 @@ const Page2Component = (props) => {
                                           temp.company_name =
                                             temp.company_name.trimStart();
                                           setData(temp);
-                                          console.log(temp.company_name);
                                         }
-                                        console.log(disable);
                                       }}
                                     >
                                       {edit === 0 && disable ? (
@@ -1169,17 +1137,11 @@ const Page2Component = (props) => {
                                                   let temp = data;
                                                   temp.from_address = " ";
                                                   setData(temp);
-                                                  console.log(
-                                                    temp.from_address
-                                                  );
                                                 } else {
                                                   let temp = data;
                                                   temp.from_address =
                                                     event.target.value;
                                                   setData(temp);
-                                                  console.log(
-                                                    temp.from_address
-                                                  );
                                                 }
                                               }}
                                             />
@@ -1204,10 +1166,8 @@ const Page2Component = (props) => {
                                           temp.from_address =
                                             temp.from_address.trimStart();
                                           setData(temp);
-                                          console.log(temp.from_address);
                                         }
                                         setDisable(!disable);
-                                        console.log(disable);
                                       }}
                                     >
                                       {edit === 1 && disable ? (
@@ -1284,13 +1244,11 @@ const Page2Component = (props) => {
                                                   let temp = data;
                                                   temp.to_address = " ";
                                                   setData(temp);
-                                                  console.log(temp.to_address);
                                                 } else {
                                                   let temp = data;
                                                   temp.to_address =
                                                     event.target.value;
                                                   setData(temp);
-                                                  console.log(temp.to_address);
                                                 }
                                               }}
                                             />
@@ -1315,9 +1273,7 @@ const Page2Component = (props) => {
                                           temp.to_address =
                                             temp.to_address.trimStart();
                                           setData(temp);
-                                          console.log(temp.to_address);
                                         }
-                                        console.log(disable);
                                       }}
                                     >
                                       {edit === 2 && disable ? (
@@ -1349,13 +1305,11 @@ const Page2Component = (props) => {
                                           let temp = data;
                                           temp.invoice_date = " ";
                                           setData(temp);
-                                          console.log(temp.invoice_date);
                                         } else {
                                           let temp = data;
                                           temp.invoice_date =
                                             event.target.value;
                                           setData(temp);
-                                          console.log(temp.invoice_date);
                                         }
                                       }}
                                       readOnly={
@@ -1376,9 +1330,7 @@ const Page2Component = (props) => {
                                           temp.invoice_date =
                                             temp.invoice_date.trimStart();
                                           setData(temp);
-                                          console.log(temp.invoice_date);
                                         }
-                                        console.log(disable);
                                       }}
                                     >
                                       {edit === 3 && disable ? (
@@ -1410,12 +1362,10 @@ const Page2Component = (props) => {
                                           let temp = data;
                                           temp.due_date = " ";
                                           setData(temp);
-                                          console.log(temp.due_date);
                                         } else {
                                           let temp = data;
                                           temp.due_date = event.target.value;
                                           setData(temp);
-                                          console.log(temp.due_date);
                                         }
                                       }}
                                       readOnly={
@@ -1439,9 +1389,7 @@ const Page2Component = (props) => {
                                           temp.due_date =
                                             temp.due_date.trimStart();
                                           setData(temp);
-                                          console.log(temp.due_date);
                                         }
-                                        console.log(disable);
                                       }}
                                     >
                                       {edit === 4 && disable ? (
@@ -1473,13 +1421,11 @@ const Page2Component = (props) => {
                                           let temp = data;
                                           temp.phone_number = " ";
                                           setData(temp);
-                                          console.log(temp.phone_number);
                                         } else {
                                           let temp = data;
                                           temp.phone_number =
                                             event.target.value;
                                           setData(temp);
-                                          console.log(temp.phone_number);
                                         }
                                       }}
                                       readOnly={
@@ -1501,9 +1447,7 @@ const Page2Component = (props) => {
                                           temp.phone_number =
                                             temp.phone_number.trimStart();
                                           setData(temp);
-                                          console.log(temp.phone_number);
                                         }
-                                        console.log(disable);
                                       }}
                                     >
                                       {edit === 5 && disable ? (
@@ -1535,13 +1479,11 @@ const Page2Component = (props) => {
                                           let temp = data;
                                           temp.invoice_number = " ";
                                           setData(temp);
-                                          console.log(temp.invoice_number);
                                         } else {
                                           let temp = data;
                                           temp.invoice_number =
                                             event.target.value;
                                           setData(temp);
-                                          console.log(temp.invoice_number);
                                         }
                                       }}
                                       readOnly={
@@ -1563,9 +1505,7 @@ const Page2Component = (props) => {
                                           temp.invoice_number =
                                             temp.invoice_number.trimStart();
                                           setData(temp);
-                                          console.log(temp.invoice_number);
                                         }
-                                        console.log(disable);
                                       }}
                                     >
                                       {edit === 6 && disable ? (
@@ -1593,7 +1533,6 @@ const Page2Component = (props) => {
                                         temp.category = event.target.value;
                                         setTxt(event.target.value);
                                         setData(temp);
-                                        console.log(temp.category);
                                       }}
                                     >
                                       <option>
@@ -1635,7 +1574,6 @@ const Page2Component = (props) => {
 
                                       setEdit(14);
                                       setDisable(!disable);
-                                      console.log(disable);
                                     }}
                                   >
                                     {edit === 14 && disable ? (
@@ -1667,7 +1605,6 @@ const Page2Component = (props) => {
                                           let temp = data;
                                           temp.currency = event.target.value;
                                           setData(temp);
-                                          console.log(temp.currency);
                                         }}
                                       >
                                         <option>
@@ -1702,9 +1639,7 @@ const Page2Component = (props) => {
                                           temp.currency =
                                             temp.currency.trimStart();
                                           setData(temp);
-                                          console.log(temp.currency);
                                         }
-                                        console.log(disable);
                                       }}
                                     >
                                       {edit === 7 && disable ? (
@@ -1724,7 +1659,7 @@ const Page2Component = (props) => {
                                       className="dot"
                                       style={setBg(9)}
                                     ></span>
-                                    {arabic ? "المجموع" : "Sub Total"}
+                                    {arabic ? "المجموع الفرعي" : "Sub Total"}
                                   </td>
                                   <td>
                                     <span>
@@ -1771,12 +1706,10 @@ const Page2Component = (props) => {
                                           let temp = data;
                                           temp.sub_total = " ";
                                           setData(temp);
-                                          console.log(temp.sub_total);
                                         } else {
                                           let temp = data;
                                           temp.sub_total = event.target.value;
                                           setData(temp);
-                                          console.log(temp.sub_total);
                                         }
                                       }}
                                       readOnly={
@@ -1800,9 +1733,7 @@ const Page2Component = (props) => {
                                           temp.sub_total =
                                             temp.sub_total.trimStart();
                                           setData(temp);
-                                          console.log(temp.sub_total);
                                         }
-                                        console.log(disable);
                                       }}
                                     >
                                       {edit === 9 && disable ? (
@@ -1834,12 +1765,10 @@ const Page2Component = (props) => {
                                           let temp = data;
                                           temp.tax = " ";
                                           setData(temp);
-                                          console.log(temp.tax);
                                         } else {
                                           let temp = data;
                                           temp.tax = event.target.value;
                                           setData(temp);
-                                          console.log(temp.tax);
                                         }
                                       }}
                                       readOnly={
@@ -1860,9 +1789,7 @@ const Page2Component = (props) => {
                                           let temp = data;
                                           temp.tax = temp.tax.trimStart();
                                           setData(temp);
-                                          console.log(temp.tax);
                                         }
-                                        console.log(disable);
                                       }}
                                     >
                                       {edit === 10 && disable ? (
@@ -1894,12 +1821,10 @@ const Page2Component = (props) => {
                                           let temp = data;
                                           temp.discount = " ";
                                           setData(temp);
-                                          console.log(temp.discount);
                                         } else {
                                           let temp = data;
                                           temp.discount = event.target.value;
                                           setData(temp);
-                                          console.log(temp.discount);
                                         }
                                       }}
                                       readOnly={
@@ -1921,9 +1846,7 @@ const Page2Component = (props) => {
                                           temp.discount =
                                             temp.discount.trimStart();
                                           setData(temp);
-                                          console.log(temp.discount);
                                         }
-                                        console.log(disable);
                                       }}
                                     >
                                       {edit === 11 && disable ? (
@@ -1943,7 +1866,7 @@ const Page2Component = (props) => {
                                       className="dot"
                                       style={setBg(8)}
                                     ></span>
-                                    {arabic ? "المجموع الفرعي" : "total"}
+                                    {arabic ? "مجموع" : "total"}
                                   </td>
                                   <td>
                                     {parseInt(
@@ -1991,12 +1914,10 @@ const Page2Component = (props) => {
                                           let temp = data;
                                           temp.total = " ";
                                           setData(temp);
-                                          console.log(temp.total);
                                         } else {
                                           let temp = data;
                                           temp.total = event.target.value;
                                           setData(temp);
-                                          console.log(temp.total);
                                         }
                                       }}
                                       readOnly={
@@ -2016,9 +1937,7 @@ const Page2Component = (props) => {
                                           let temp = data;
                                           temp.total = temp.total.trimStart();
                                           setData(temp);
-                                          console.log(temp.total);
                                         }
-                                        console.log(disable);
                                       }}
                                     >
                                       {edit === 8 && disable ? (
@@ -2103,7 +2022,6 @@ const Page2Component = (props) => {
                                     setEdit(13);
 
                                     setBill(true);
-                                    console.log(disable);
                                   }}
                                 >
                                   {edit === 13 && disable ? (

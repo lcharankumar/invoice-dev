@@ -1,17 +1,15 @@
 import React, { useRef, useEffect, useState, useLayoutEffect } from "react";
-import img1 from "../img/img1.png";
-import img2 from "../img/original.png";
+
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
 import Modal from "react-bootstrap/Modal";
 import Row from "react-bootstrap/Row";
 
-import { ArabicContext } from "../context/arabicContext";
+import { ArabicContext } from "../../context/arabicContext";
 import { useContext } from "react";
 const RectangleComponent = (props) => {
   const { arabic } = useContext(ArabicContext);
-  console.log("rect comp", props);
   const [modalShow, setModalShow] = useState(true);
   const pixelRatio = window.devicePixelRatio || 1;
   const canvas = useRef();
@@ -33,19 +31,12 @@ const RectangleComponent = (props) => {
   // initialize the canvas context
   useLayoutEffect(() => {
     if (targetRef.current) {
-      console.log(
-        "Before",
-        targetRef.current.offsetWidth,
-        targetRef.current.offsetHeight
-      );
-
       setImgh(targetRef.current.offsetHeight);
       setImgw(targetRef.current.offsetWidth);
       //console.log(currh,currw)
     }
   }, []);
   useEffect(() => {
-    console.log(props.img);
     // dynamically assign the width and height to canvas
 
     const canvasEle = canvas.current;
@@ -60,14 +51,11 @@ const RectangleComponent = (props) => {
     // image.width=currw
     // image.height=currh
 
-    console.log("After", image);
-
-    console.log(currh, currw);
     //ctx.drawImage(image, 0, 0);
 
     const timer = setTimeout(() => {
       //ctx.scale(currw * pixelRatio, currh*pixelRatio)
-      console.log(imgw, imgh);
+
       ctx.drawImage(image, 0, 0, currw, currh);
 
       const r1Info = props.coordinates;
@@ -80,7 +68,6 @@ const RectangleComponent = (props) => {
   }, []);
 
   const drawRect = (info, style = {}) => {
-    console.log(info);
     const { x, y, w, h } = info;
     const { borderColor = "black", borderWidth = 1 } = style;
 

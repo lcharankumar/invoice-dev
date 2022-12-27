@@ -10,16 +10,16 @@ import { Link, useNavigate } from "react-router-dom";
 import { BrowserRouter, Routes, Route, Redirect } from "react-router-dom";
 
 import LoginComponent from "./components/LoginComponent";
-import DashboardComponent from "./components/DashboardComponent";
-import ProgressComponent from "./components/ProgressComponent";
-import AdminDashboardComponent from "./components/AdminDashboardComponent";
-import AdminComponent from "./components/AdminComponent";
+import DashboardComponent from "./components/Dashboards/DashboardComponent";
+import ProgressComponent from "./components/request/ProgressComponent";
+import AdminDashboardComponent from "./components/Dashboards/AdminDashboardComponent";
+import AdminComponent from "./components/Dashboards/AdminComponent";
 import axios, * as others from "axios";
 import jwt_decode from "jwt-decode";
-import HeadDashboardComponent from "./components/HeadDashboardComponent";
-import ProfileComponent from "./components/ProfileComponent";
+import HeadDashboardComponent from "./components/Dashboards/HeadDashboardComponent";
+import ProfileComponent from "./components/Dashboards/ProfileComponent";
 import HomeLoaderComponent from "./components/HomeLoaderComponent";
-
+import TestComponent from "./components/TestComponent";
 function App() {
   //const navigate = useNavigate();
   const [flag, setFlag] = useState(false);
@@ -56,6 +56,8 @@ function App() {
         decoded = jwt_decode(localStorage.getItem("token"));
       } catch (error) {
         console.log(error);
+
+        window.location.reload();
       }
       console.log(decoded);
       localStorage.setItem("name", decoded.name);
@@ -142,6 +144,7 @@ function App() {
               path="/profile"
               element={<ProfileComponent></ProfileComponent>}
             />
+            <Route path="/test" element={<TestComponent></TestComponent>} />
             <Route
               path="/admin"
               element={
