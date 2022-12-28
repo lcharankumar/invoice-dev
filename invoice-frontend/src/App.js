@@ -43,7 +43,7 @@ function App() {
     const formData1 = new FormData();
     formData1.append("token", localStorage.getItem("token"));
     let res = { data: "" };
-    res = await axios.post("http://127.0.0.1:5000/api/token", formData1);
+    res = await axios.post("http://172.17.19.26:3000/token", formData1);
     console.log("Token", res);
     if (res.data == "Success") {
       setFlag(true);

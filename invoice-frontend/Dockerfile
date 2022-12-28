@@ -1,21 +1,17 @@
 FROM node:16-alpine 
 
-WORKDIR /user/src/app 
+# Declaring env
+ENV NODE_ENV development
 
-ENV PATH /user/src/app/node_modules/.bin:$PATH
+# Setting up the work directory
+WORKDIR /react-app
 
-COPY ./package.json ./
+# Installing dependencies
+COPY ./package.json /react-app
 
-COPY ./src ./src
+RUN npm install
 
-COPY ./public ./public
-
-RUN npm install -g npm@latest 
-
-RUN rm -rf node_modules
-
-RUN npm install 
-
+# Copying all the files in our project
 COPY . .
 
 EXPOSE 3000
