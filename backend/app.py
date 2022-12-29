@@ -48,14 +48,14 @@ from fastapi.middleware.cors import CORSMiddleware
 from dataclasses import dataclass, field
 from base64 import decodestring
 SECRET_KEY = '004f2af45d3a4e161a7dd2d17fdae47f'
-# nltk.download('punkt')
+nltk.download('punkt')
 from nltk.corpus import stopwords
-# nltk.download('stopwords')
+nltk.download('stopwords')
 from nltk.stem import WordNetLemmatizer
 
 lm= WordNetLemmatizer()
-# nltk.download('wordnet')
-# stopwords.words("english")
+nltk.download('wordnet')
+stopwords.words("english")
 # pytesseract.pytesseract.tesseract_cmd = 'C:/Users/lcharankumar/AppData/Local/Tesseract-OCR//tesseract.exe'
 
 SECRET_KEY = '004f2af45d3a4e161a7dd2d17fdae47f'
@@ -1024,10 +1024,8 @@ def predict(file_input: bytes = File(),lang_input:str = Form()):
         f = ''.join([j for j in " ".join(i) if not j.isdigit()])
         g.append(f)
     sentence = "".join(g)
-
     sentence = sentence.lower()
     words = nltk.word_tokenize(sentence.lower())
-
     new_words = [word for word in words if word.isalnum()]
 
     WordSet = []
