@@ -6,8 +6,6 @@ RUN apt-get update -qq
 
 RUN apt-get install -y -qq libtesseract-dev libleptonica-dev tesseract-ocr
 
-ENV TESSDATA_PREFIX=/usr/share/tesseract-ocr/4.00/tessdata/
-
 RUN apt-get install -y -qq \
   tesseract-ocr-eng \
   tesseract-ocr-ara \
@@ -28,3 +26,4 @@ EXPOSE 5000
 COPY . .
 
 CMD ["uvicorn", "app:app", "--host", "0.0.0.0","--port","5000"]
+
