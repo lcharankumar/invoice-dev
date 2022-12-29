@@ -48,14 +48,14 @@ from fastapi.middleware.cors import CORSMiddleware
 from dataclasses import dataclass, field
 from base64 import decodestring
 SECRET_KEY = '004f2af45d3a4e161a7dd2d17fdae47f'
-nltk.download('punkt')
+# nltk.download('punkt')
 from nltk.corpus import stopwords
-nltk.download('stopwords')
+# nltk.download('stopwords')
 from nltk.stem import WordNetLemmatizer
 
 lm= WordNetLemmatizer()
-nltk.download('wordnet')
-stopwords.words("english")
+# nltk.download('wordnet')
+# stopwords.words("english")
 # pytesseract.pytesseract.tesseract_cmd = 'C:/Users/lcharankumar/AppData/Local/Tesseract-OCR//tesseract.exe'
 
 SECRET_KEY = '004f2af45d3a4e161a7dd2d17fdae47f'
@@ -238,7 +238,7 @@ def data3(uid:str = Form()):
 
 
 @app.get('/allrequests',dependencies=[Depends(token_required)])
-def data4():
+def data4(token:str = Form()):
     uri = "mongodb+srv://digiverz:digiverz@cluster0.ngqcelw.mongodb.net/?retryWrites=true&w=majority"
     client = pymongo.MongoClient(uri)
     database = client['invoice']
@@ -322,8 +322,8 @@ def data10(uid:str = Form()):
 
 
 
-@app.get('/getallemp',dependencies=[Depends(token_required)])
-def data22():
+@app.post('/getallemp',dependencies=[Depends(token_required)])
+def data22(token:str = Form()):
     uri = "mongodb+srv://digiverz:digiverz@cluster0.ngqcelw.mongodb.net/?retryWrites=true&w=majority"
     client = pymongo.MongoClient(uri)
     database = client['invoice']
@@ -334,8 +334,8 @@ def data22():
         lst.append(x)
     return lst
 
-@app.get('/getalldept',dependencies=[Depends(token_required)])
-def data23():
+@app.post('/getalldept',dependencies=[Depends(token_required)])
+def data23(token:str = Form()):
     uri = "mongodb+srv://digiverz:digiverz@cluster0.ngqcelw.mongodb.net/?retryWrites=true&w=majority"
     client = pymongo.MongoClient(uri)
     database = client['invoice']
@@ -346,8 +346,8 @@ def data23():
 
     return lst
 
-@app.get('/adddept',dependencies=[Depends(token_required)])
-def data28():
+@app.post('/adddept',dependencies=[Depends(token_required)])
+def data28(token:str = Form()):
     uri = "mongodb+srv://digiverz:digiverz@cluster0.ngqcelw.mongodb.net/?retryWrites=true&w=majority"
     client = pymongo.MongoClient(uri)
     database = client['invoice']
@@ -413,8 +413,8 @@ def data535(uid:str = Form(),nuid:str = Form(),role:str = Form(),name:str = Form
     collection3.update_many(myquery, newvalues)
     return "Success"
 
-@app.get('/totalemp',dependencies=[Depends(token_required)])
-def data5378():
+@app.post('/totalemp',dependencies=[Depends(token_required)])
+def data5378(token:str = Form()):
     uri = "mongodb+srv://digiverz:digiverz@cluster0.ngqcelw.mongodb.net/?retryWrites=true&w=majority"
     client = pymongo.MongoClient(uri)
     database = client['invoice']
@@ -436,8 +436,8 @@ def data5359(total:str = Form()):
     collection.update_one(myquery, newvalues)
     return "Success"
 
-@app.get('/totalreq',dependencies=[Depends(token_required)])
-def data5379():
+@app.post('/totalreq',dependencies=[Depends(token_required)])
+def data5379(token:str = Form()):
     uri = "mongodb+srv://digiverz:digiverz@cluster0.ngqcelw.mongodb.net/?retryWrites=true&w=majority"
     client = pymongo.MongoClient(uri)
     database = client['invoice']
