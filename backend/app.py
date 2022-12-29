@@ -237,7 +237,7 @@ def data3(uid:str = Form()):
     return lst
 
 
-@app.post('/allrequests',dependencies=[Depends(token_required)])
+@app.get('/allrequests',dependencies=[Depends(token_required)])
 def data4():
     uri = "mongodb+srv://digiverz:digiverz@cluster0.ngqcelw.mongodb.net/?retryWrites=true&w=majority"
     client = pymongo.MongoClient(uri)
@@ -322,7 +322,7 @@ def data10(uid:str = Form()):
 
 
 
-@app.post('/getallemp',dependencies=[Depends(token_required)])
+@app.get('/getallemp',dependencies=[Depends(token_required)])
 def data22():
     uri = "mongodb+srv://digiverz:digiverz@cluster0.ngqcelw.mongodb.net/?retryWrites=true&w=majority"
     client = pymongo.MongoClient(uri)
@@ -334,7 +334,7 @@ def data22():
         lst.append(x)
     return lst
 
-@app.post('/getalldept',dependencies=[Depends(token_required)])
+@app.get('/getalldept',dependencies=[Depends(token_required)])
 def data23():
     uri = "mongodb+srv://digiverz:digiverz@cluster0.ngqcelw.mongodb.net/?retryWrites=true&w=majority"
     client = pymongo.MongoClient(uri)
@@ -346,7 +346,7 @@ def data23():
 
     return lst
 
-@app.post('/adddept',dependencies=[Depends(token_required)])
+@app.get('/adddept',dependencies=[Depends(token_required)])
 def data28():
     uri = "mongodb+srv://digiverz:digiverz@cluster0.ngqcelw.mongodb.net/?retryWrites=true&w=majority"
     client = pymongo.MongoClient(uri)
@@ -413,7 +413,7 @@ def data535(uid:str = Form(),nuid:str = Form(),role:str = Form(),name:str = Form
     collection3.update_many(myquery, newvalues)
     return "Success"
 
-@app.post('/totalemp',dependencies=[Depends(token_required)])
+@app.get('/totalemp',dependencies=[Depends(token_required)])
 def data5378():
     uri = "mongodb+srv://digiverz:digiverz@cluster0.ngqcelw.mongodb.net/?retryWrites=true&w=majority"
     client = pymongo.MongoClient(uri)
@@ -436,7 +436,7 @@ def data5359(total:str = Form()):
     collection.update_one(myquery, newvalues)
     return "Success"
 
-@app.post('/totalreq',dependencies=[Depends(token_required)])
+@app.get('/totalreq',dependencies=[Depends(token_required)])
 def data5379():
     uri = "mongodb+srv://digiverz:digiverz@cluster0.ngqcelw.mongodb.net/?retryWrites=true&w=majority"
     client = pymongo.MongoClient(uri)
