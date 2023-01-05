@@ -156,8 +156,8 @@ const AdminComponent = () => {
     password: "",
   });
   useEffect(() => {
-    let formData = new FormData();
-    formData.append("token", localStorage.getItem("token"));
+    // let formData1 = new FormData();
+    // formData1.append("token", localStorage.getItem("token"));
     if (mainData.length > 2) {
       let temp = [];
       let temp1 = [];
@@ -195,8 +195,10 @@ const AdminComponent = () => {
         },
       ],
     };
-    res = await axios.post("http://172.17.19.26:5000/getallemp", formData);
-    res1 = await axios.post("http://172.17.19.26:5000/totalemp", formData);
+    let formData1 = new FormData();
+    formData1.append("token", localStorage.getItem("token"));
+    res = await axios.post("http://127.0.0.1:5000/getallemp", formData1);
+    res1 = await axios.post("http://127.0.0.1:5000/totalemp", formData1);
 
     setMainData(res.data);
     setTotalEmp(parseInt(res1.data[0].total));
@@ -209,7 +211,9 @@ const AdminComponent = () => {
         },
       ],
     };
-    res = await axios.post("http://172.17.19.26:5000/getalldept", formData);
+    let formData1 = new FormData();
+    formData1.append("token", localStorage.getItem("token"));
+    res = await axios.post("http://127.0.0.1:5000/getalldept", formData1);
 
     setDept(res.data[0].dept);
 
