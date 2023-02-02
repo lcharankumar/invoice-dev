@@ -5,7 +5,7 @@ import "../../style/custom_css.css";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import React, { useState, useEffect, useRef } from "react";
-
+import { Link } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
@@ -64,9 +64,9 @@ function Nav_testingComponent() {
             <Nav className="justify-content-end">
               <Navbar.Text>
                 <div class="app-header-actions-buttons">
-                  <Nav.Link className="icon-button large" href="/dashboard">
+                  <Link className="icon-button large" to="/dashboard">
                     <iconify-icon icon="uil:home" />
-                  </Nav.Link>
+                  </Link>
                   <button
                     class="icon-button large"
                     onClick={(e) => {

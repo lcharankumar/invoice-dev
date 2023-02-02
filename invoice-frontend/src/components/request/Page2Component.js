@@ -10,7 +10,7 @@ import ZoomComponent from "./ZoomComponent";
 import TableComponent from "./TableComponent";
 import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
-
+import AddCustom from "./AddCustom";
 import axios from "axios";
 
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
@@ -27,6 +27,8 @@ import { DarkModeContext } from "../../context/darkModeContext";
 
 import { useContext } from "react";
 import { color } from "@mui/system";
+import URI from "../utils/requests";
+import { getByAltText } from "@testing-library/react";
 const Page2Component = (props) => {
   const { arabic } = useContext(ArabicContext);
   const { darkMode } = useContext(DarkModeContext);
@@ -79,6 +81,7 @@ const Page2Component = (props) => {
     "barcode",
     "logo",
     "bill_of_materials",
+    "company_name",
   ];
 
   const [crop, setCrop] = useState(null);
@@ -90,6 +93,7 @@ const Page2Component = (props) => {
   const [prev, setPrev] = useState(null);
   const [predicted, setPredicted] = useState(true);
   const [imageFile, setImageFile] = useState(null);
+  const [rowdata, setrowdata] = useState([]);
   const [data, setData] = useState({
     company_name: "",
     from_address: "",
@@ -106,6 +110,7 @@ const Page2Component = (props) => {
     barcode: "",
     category: "",
     logo: "",
+    custom: [{}],
     bill_of_materials: [
       {
         description: [""],
@@ -115,6 +120,7 @@ const Page2Component = (props) => {
       },
     ],
   });
+  const [labInd, setLabInd] = useState(0);
   const [edit, setEdit] = useState(-1);
   const [extract, setExtract] = useState("");
   const [collapse, setCollapse] = useState(false);
@@ -127,6 +133,7 @@ const Page2Component = (props) => {
   const [zoom, setZoom] = useState(false);
   let setCoordinates = props.setCoordinates;
   let coordinates = props.coordinates;
+  let labText = "";
 
   const [fullscreen, setFullscreen] = useState(true);
   const [show, setShow] = useState(false);
@@ -254,25 +261,13 @@ const Page2Component = (props) => {
       },
     };
     //res.data = TestData2;
+    console.log(res.data.custom);
     try {
-      res = await axios.post("http://172.17.19.26:5000/predict", formData1);
+      res = await axios.post(URI + "predict", formData1);
     } catch (error) {
       window.alert("Some thing went wrong please try again");
       //window.location.reload();
     }
-    // const byteCharacters = atob(res.data.image);
-    // const byteNumbers = new Array(byteCharacters.length);
-    // for (let i = 0; i < byteCharacters.length; i++) {
-    //   byteNumbers[i] = byteCharacters.charCodeAt(i);
-    // }
-    // const byteArray = new Uint8Array(byteNumbers);
-
-    // let image = new Blob([byteArray], { type: "image/jpeg" });
-    // let imageUrl = URL.createObjectURL(image);
-    // res.data.image = byteCharacters;
-    // var image = new Image();
-    // image.src = `data:image/png;base64,${res.data.image}`;
-    // res.data.image = image;------
 
     setDat(dat + 1);
     event.preventDefault();
@@ -295,6 +290,10 @@ const Page2Component = (props) => {
     return s;
   };
   const handleSubmit = async () => {
+    if (edit == 15) {
+      getText();
+      return;
+    }
     setZoom(true);
 
     handleClose();
@@ -317,6 +316,7 @@ const Page2Component = (props) => {
     formData2.append("file_input", imageFile1);
     formData2.append("label_input", label1[edit]);
     formData2.append("token", localStorage.getItem("token"));
+    formData2.append("lang_input", props.lang);
 
     let res = { data: "" };
     if (edit === 13) {
@@ -335,14 +335,14 @@ const Page2Component = (props) => {
     }
 
     try {
-      res = await axios.post("http://172.17.19.26:5000/crop", formData2);
+      res = await axios.post(URI + "crop", formData2);
     } catch (error) {
       window.alert("Some thing went wrong please try again");
     }
 
     const txt = res.data;
-    //const txt = "26/09/2022"
-    setExtract(txt);
+    //const txt = "26/09/2022";
+
     if (edit == 0) {
       let temp = data;
       temp.company_name = txt;
@@ -539,6 +539,62 @@ const Page2Component = (props) => {
       </>
     );
   };
+  const getText = async () => {
+    setShow(false);
+    setSpin(true);
+    var arr = crop.split(","),
+      mime = arr[0].match(/:(.*?);/)[1],
+      bstr = atob(arr[1]),
+      n = bstr.length,
+      u8arr = new Uint8Array(n);
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+    let imageFile1 = new File([u8arr], "cropped.png", { type: "image/png" });
+    setImageFile(crop);
+
+    var image = new Image();
+    image.src = crop;
+    //let im = URL.createObjectURL(crop);
+    const formData2 = new FormData();
+    formData2.append("file_input", imageFile1);
+    formData2.append("label_input", label1[0]);
+    formData2.append("token", localStorage.getItem("token"));
+    formData2.append("lang_input", props.lang);
+
+    let res = { data: "" };
+    if (edit === 13) {
+      res = {
+        data: {
+          bill_of_materials: [
+            {
+              description: [""],
+              quantity: [""],
+              unit_price: [""],
+              price: [""],
+            },
+          ],
+        },
+      };
+    }
+
+    try {
+      res = await axios.post(URI + "crop", formData2);
+      setSpin(false);
+    } catch (error) {
+      window.alert("Some thing went wrong please try again");
+      setSpin(false);
+    }
+
+    const txt = res.data;
+    //const txt = "29/09/2022";
+    const rowsInput = [...rowdata];
+    console.log(rowsInput, labInd);
+    rowsInput[labInd]["value"] = txt;
+    let temp = data;
+    temp.custom = rowsInput;
+    setData(temp);
+  };
   const add1 = (text) => {
     const myArray = text.split("\n");
     return (
@@ -572,6 +628,47 @@ const Page2Component = (props) => {
       </>
     );
   };
+  const [currCust, setCurrCust] = useState(false);
+  const cust = () => {
+    const rows = [];
+    for (var itms in data.custom) {
+      console.log(data.custom[itms]);
+      rows.push(
+        <tr>
+          <td class="headcol">
+            <span className="dot" style={setBg(11)}></span>
+            {data.custom[itms].label}
+          </td>
+          <td>
+            <input
+              style={{ border: "none" }}
+              className="typing-container"
+              value={data.custom[itms].value}
+              readOnly={true}
+            />
+          </td>
+          <td> </td>
+        </tr>
+      );
+    }
+    return rows;
+  };
+  if (currCust) {
+    return (
+      <AddCustom
+        show={currCust}
+        setShow={setCurrCust}
+        data={data}
+        setData={setData}
+        mainData={data.custom}
+        showCrop={setShow}
+        txt={extract}
+        getText={getText}
+        setLabInd={setLabInd}
+        setrowdata={setrowdata}
+      />
+    );
+  }
   return (
     <>
       <Modal
@@ -934,21 +1031,7 @@ const Page2Component = (props) => {
                                         {arabic ? "تخفيض" : "Invoice Number"}
                                       </Dropdown.Item>
                                     )}
-                                    {data.currency == "" && (
-                                      <Dropdown.Item
-                                        onClick={() => {
-                                          let temp = data;
-                                          temp.currency = "none";
-                                          setTxt("none");
-                                          setEdit(7);
-                                          setDisable(!disable);
-                                          setData(temp);
-                                        }}
-                                      >
-                                        {" "}
-                                        {arabic ? "ضريبة" : "Currency"}
-                                      </Dropdown.Item>
-                                    )}
+
                                     {data.total == "" && (
                                       <Dropdown.Item
                                         onClick={() => {
@@ -1615,7 +1698,7 @@ const Page2Component = (props) => {
                                         <option value="$">$ USD</option>
                                         <option value="€">€ EURO</option>
                                         <option value="₹">₹ INR</option>
-                                        <option value="﷼">﷼ SAR</option>
+                                        <option value={"﷼"}>﷼ SAR</option>
                                       </select>
                                     ) : (
                                       <input
@@ -1949,7 +2032,29 @@ const Page2Component = (props) => {
                                   </td>
                                 </tr>
                               )}
-
+                              <tr>
+                                <td class="headcol">
+                                  {arabic ? "Custom" : "Custom Labels"}
+                                </td>
+                                <td> </td>
+                                <td>
+                                  <button
+                                    className="Pen"
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      setCurrCust(true);
+                                      setEdit(15);
+                                    }}
+                                  >
+                                    {edit === 15 && disable ? (
+                                      <iconify-icon icon="charm:tick"></iconify-icon>
+                                    ) : (
+                                      <iconify-icon icon="uil:pen"></iconify-icon>
+                                    )}
+                                  </button>
+                                </td>
+                              </tr>
+                              {Object.keys(data.custom).length >= 1 && cust()}
                               <br />
                             </tbody>
                           </table>

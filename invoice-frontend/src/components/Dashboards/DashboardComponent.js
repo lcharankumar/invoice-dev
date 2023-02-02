@@ -27,6 +27,7 @@ import TablePaginationUnstyled, {
 } from "@mui/base/TablePaginationUnstyled";
 
 import $ from "jquery";
+import URI from "../utils/requests";
 
 const DashboardComponent = (props) => {
   const [loadCurr, setLoadCurr] = useState(false);
@@ -79,8 +80,8 @@ const DashboardComponent = (props) => {
   ]);
   const navigate = useNavigate();
   useEffect(() => {
-    if (localStorage.getItem("role") == "admin") {
-      navigate("/Admin");
+    if (localStorage.getItem("role") == "Admin") {
+      navigate("/admin");
     }
   }, []);
 
@@ -304,7 +305,12 @@ const DashboardComponent = (props) => {
       formData1.append("token", localStorage.getItem("token"));
       const formData2 = new FormData();
       formData2.append("token", localStorage.getItem("token"));
-      res = await axios.post("http://172.17.19.26:5000/requests", formData1);
+      try {
+        res = await axios.post(URI + "requests", formData1);
+        console.log(res);
+      } catch (error) {
+        console.log(error);
+      }
       let res1 = {
         data: [
           {
@@ -315,7 +321,7 @@ const DashboardComponent = (props) => {
           },
         ],
       };
-      res1 = await axios.post("http://172.17.19.26:5000/getallemp", formData2);
+      res1 = await axios.post(URI + "getallemp", formData2);
       let tempemp1 = [];
       res1.data.map((itms, index) => {
         if (

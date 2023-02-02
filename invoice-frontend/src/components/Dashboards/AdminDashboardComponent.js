@@ -23,6 +23,7 @@ import TablePaginationUnstyled, {
 
 import $ from "jquery";
 import { tab } from "@testing-library/user-event/dist/tab";
+import URI from "../utils/requests";
 
 const AdminDashboardComponent = () => {
   const { darkMode } = useContext(DarkModeContext);
@@ -264,7 +265,7 @@ const AdminDashboardComponent = () => {
       const formData1 = new FormData();
       formData1.append("uid", localStorage.getItem("uid"));
       formData1.append("token", localStorage.getItem("token"));
-      res = await axios.post("http://172.17.19.26:5000/allrequests", formData1);
+      res = await axios.post(URI + "allrequests", formData1);
       // res.data = res.data.filter(function (itm) {
       //   return itm.dept == localStorage.getItem("dept");
       // });
@@ -635,7 +636,7 @@ const AdminDashboardComponent = () => {
       formData1.append("data", JSON.stringify(temp.data));
       formData1.append("token", localStorage.getItem("token"));
 
-      let res = await axios.post("http://172.17.19.26:5000/update", formData1);
+      let res = await axios.post(URI + "update", formData1);
     } catch (error) {
       window.alert("Some thing went wrong please try again");
       console.log(error);
@@ -704,7 +705,7 @@ const AdminDashboardComponent = () => {
       formData1.append("data", JSON.stringify(temp.data));
       formData1.append("token", localStorage.getItem("token"));
 
-      let res = await axios.post("http://172.17.19.26:5000/update", formData1);
+      let res = await axios.post(URI + "update", formData1);
     } catch (error) {
       window.alert("Some thing went wrong please try again");
       console.log(error);

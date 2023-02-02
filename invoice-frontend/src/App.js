@@ -8,7 +8,7 @@ import { DarkModeContext } from "./context/darkModeContext";
 import NotfoundComponent from "./components/NotfoundComponent";
 import { Link, useNavigate } from "react-router-dom";
 import { BrowserRouter, Routes, Route, Redirect } from "react-router-dom";
-
+import HomeComponent from "./components/HomeComponent";
 import LoginComponent from "./components/LoginComponent";
 import DashboardComponent from "./components/Dashboards/DashboardComponent";
 import ProgressComponent from "./components/request/ProgressComponent";
@@ -20,6 +20,8 @@ import HeadDashboardComponent from "./components/Dashboards/HeadDashboardCompone
 import ProfileComponent from "./components/Dashboards/ProfileComponent";
 import HomeLoaderComponent from "./components/HomeLoaderComponent";
 import TestComponent from "./components/TestComponent";
+
+import URI from "./components/utils/requests";
 function App() {
   //const navigate = useNavigate();
   const [flag, setFlag] = useState(false);
@@ -43,7 +45,7 @@ function App() {
     const formData1 = new FormData();
     formData1.append("token", localStorage.getItem("token"));
     let res = { data: "" };
-    res = await axios.post("http://172.17.19.26:3000/token", formData1);
+    res = await axios.post(URI + "token", formData1);
     console.log("Token", res);
     if (res.data == "Success") {
       setFlag(true);
@@ -89,10 +91,7 @@ function App() {
       <div className={darkMode ? "app-dark" : "app-light"}>
         <BrowserRouter>
           <Routes>
-            <Route
-              path="/"
-              element={<LoginComponent setLogin={setFlag}></LoginComponent>}
-            />
+            <Route path="/" element={<HomeComponent></HomeComponent>} />
             <Route
               path="*"
               exact

@@ -48,14 +48,14 @@ from fastapi.middleware.cors import CORSMiddleware
 from dataclasses import dataclass, field
 from base64 import decodestring
 SECRET_KEY = '004f2af45d3a4e161a7dd2d17fdae47f'
-# nltk.download('punkt')
-# from nltk.corpus import stopwords
-# nltk.download('stopwords')
+nltk.download('punkt')
+from nltk.corpus import stopwords
+nltk.download('stopwords')
 from nltk.stem import WordNetLemmatizer
 
 lm= WordNetLemmatizer()
-# nltk.download('wordnet')
-# stopwords.words("english")
+nltk.download('wordnet')
+stopwords.words("english")
 # pytesseract.pytesseract.tesseract_cmd = 'C:/Users/lcharankumar/AppData/Local/Tesseract-OCR//tesseract.exe'
 
 SECRET_KEY = '004f2af45d3a4e161a7dd2d17fdae47f'
@@ -89,6 +89,7 @@ predicted_response = {
     'discount':'',
     'barcode':'',
     'logo':'',
+    'custom': [],
     'category':'',
     'bill_of_materials':[
         {
@@ -116,6 +117,7 @@ def empty_resp():
     'discount':'',
     'barcode':'',
     'logo':'',
+    'custom': [],
     'category':'',
     'bill_of_materials':[
         {
@@ -237,7 +239,7 @@ def data3(uid:str = Form()):
     return lst
 
 
-@app.get('/allrequests',dependencies=[Depends(token_required)])
+@app.post('/allrequests',dependencies=[Depends(token_required)])
 def data4(token:str = Form()):
     uri = "mongodb+srv://digiverz:digiverz@cluster0.ngqcelw.mongodb.net/?retryWrites=true&w=majority"
     client = pymongo.MongoClient(uri)
@@ -752,11 +754,10 @@ def arabic_col_extract(img):
     return [i for i in pytesseract.image_to_string(img, lang='ara',config=custom_config).split("\n")[1:] if i]
 
 def company_name_extract(img):
-    custom_config = r'-l eng+ara --psm 11 --oem 3'
+    custom_config = r'-l eng --psm 11 --oem 3'
     canny = get_grayscale(img)
-    d = pytesseract.image_to_string(canny, config=custom_config,output_type=Output.DICT)
-    print("company",d['text'])
-    d = d['text']
+    d = pytesseract.image_to_string(canny, config=custom_config)
+    print("company",d)
     d = "".join(d)
     return d
 
@@ -1053,10 +1054,11 @@ def predict(file_input: bytes = File(),lang_input:str = Form()):
 def crop(file_input: bytes = File(),label_input: str = Form()):
     image = file_input
     label = label_input
+    print("image",file_input)
     image = io.BytesIO(image)
     cropped_image = np.asarray(Image.open(image).convert('RGB'))
     cropped_image = cv2.cvtColor(cropped_image, cv2.COLOR_RGB2BGR)
-    print(label)
+    print("label at crop",label)
     if label == 'from_address' or label=='to_address':
         print("address")
         # print(cropped_image.shape)
@@ -1069,6 +1071,7 @@ def crop(file_input: bytes = File(),label_input: str = Form()):
     elif label == 'company_name':
         s = company_name_extract(cropped_image)
         text  = s
+        print("inside company",text)
         return text        
     elif label == 'total':
         s = total(cropped_image,lang_input_glob)
@@ -1149,8 +1152,10 @@ def crop(file_input: bytes = File(),label_input: str = Form()):
         # category_conf = response_data['category_conf']
         return {'headers':headers_table,'values':values_table}
 
-    else:
-        return ''
+    # else:
+    #     s = address(cropped_image,lang_input_glob)
+    #     print(s)
+    #     return s
 
 
     

@@ -5,6 +5,7 @@ import "../../style/page3.scss";
 import { DarkModeContext } from "../../context/darkModeContext";
 import { useContext } from "react";
 import { ArabicContext } from "../../context/arabicContext";
+import URI from "../utils/requests";
 
 const Page3Component = (props) => {
   const { darkMode } = useContext(DarkModeContext);
@@ -23,7 +24,7 @@ const Page3Component = (props) => {
           },
         ],
       };
-      res1 = await axios.post("http://172.17.19.26:5000/totalreq", formData2);
+      res1 = await axios.post(URI + "totalreq", formData2);
       setTotalreq(parseInt(res1.data[0].total));
     };
     fetchReq();
@@ -69,6 +70,12 @@ const Page3Component = (props) => {
     currency: "",
     total: "",
     sub_total: "",
+    custom: [
+      {
+        label: "",
+        value: "",
+      },
+    ],
     tax: "",
     discount: "",
     barcode: "",
@@ -91,12 +98,6 @@ const Page3Component = (props) => {
   }, [props.finalData]);
   const fetch = async () => {
     try {
-      //  const formData1 = new FormData();
-      //  formData1.append("name", "admin");
-      //  formData1.append("uid", "admin001");
-      //  formData1.append("role", "admin");
-      //  formData1.append("password", "admin001");
-
       const formData1 = new FormData();
       let tot, sub_t, unit_p, pri;
       if (data.currency == "$") {
@@ -143,7 +144,8 @@ const Page3Component = (props) => {
         due_date: data.due_date,
         phone_number: data.phone_number,
         invoice_number: data.invoice_number,
-        currency: data.currency,
+        currency: "$",
+        custom: data.custom,
         total: tot,
         sub_total: sub_t,
         tax: data.tax,
@@ -151,7 +153,6 @@ const Page3Component = (props) => {
         discount: data.discount,
         barcode: data.barcode,
         logo: data.logo,
-
         bill_of_materials: [
           {
             description: data.bill_of_materials[0].description,
@@ -161,6 +162,7 @@ const Page3Component = (props) => {
           },
         ],
       };
+      console.log(data1);
       formData1.append("id", "dl/0" + Math.floor(totalreq + 1).toString());
       formData1.append("name", localStorage.getItem("name"));
       formData1.append("uid", localStorage.getItem("uid"));
@@ -188,13 +190,9 @@ const Page3Component = (props) => {
       const formData2 = new FormData();
       formData2.append("total", totalreq + 1);
       formData2.append("token", localStorage.getItem("token"));
-      //res = await axios.post("http://172.17.19.26:5000/request", formData1);
       try {
-        res = await axios.post("http://172.17.19.26:5000/request", formData1);
-        res1 = await axios.post(
-          "http://172.17.19.26:5000/addtotalreq",
-          formData2
-        );
+        res = await axios.post(URI + "request", formData1);
+        res1 = await axios.post(URI + "addtotalreq", formData2);
       } catch (error) {
         window.alert("Server Error");
       }
@@ -229,6 +227,23 @@ const Page3Component = (props) => {
       window.alert("Some thing went wrong please try again");
       //window.location.reload();
     }
+  };
+  const cust = () => {
+    return data.custom.map((data, index) => {
+      console.log(data);
+      const { label, value } = data;
+      return (
+        <div
+          style={{
+            flexBasis: "30%",
+            marginBottom: "20px",
+          }}
+        >
+          <strong>{arabic ? "من العنوان" : label}</strong> <br />
+          {value}
+        </div>
+      );
+    });
   };
   const add = (text) => {
     const myArray = text.split("\n");
@@ -364,6 +379,21 @@ const Page3Component = (props) => {
                       <br />
                       {add(data.to_address)}
                     </div>
+                  </div>
+                </div>
+                <div class="payment-details">
+                  <div
+                    class="row"
+                    style={{
+                      display: "flex",
+                      flexWrap: "wrap",
+                      flexDirection: "row",
+                      borderTop: "none",
+                      justifyContent: "center",
+                      marginBottom:"20px"
+                    }}
+                  >
+                    {data.custom && cust()}
                   </div>
                 </div>
 

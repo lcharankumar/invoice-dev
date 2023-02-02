@@ -4,6 +4,8 @@ import $ from "jquery";
 import { DarkModeContext } from "../../context/darkModeContext";
 import { ArabicContext } from "../../context/arabicContext";
 import { useContext } from "react";
+import "../../style/editemp.scss";
+
 const EditempComponent = (props) => {
   const { darkMode } = useContext(DarkModeContext);
   const { arabic } = useContext(ArabicContext);

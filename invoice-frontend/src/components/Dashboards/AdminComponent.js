@@ -35,6 +35,7 @@ import TablePaginationUnstyled, {
 
 import $ from "jquery";
 import EditempComponent from "./EditempComponent";
+import URI from "../utils/requests";
 
 const AdminComponent = () => {
   const { darkMode } = useContext(DarkModeContext);
@@ -156,8 +157,6 @@ const AdminComponent = () => {
     password: "",
   });
   useEffect(() => {
-    let formData = new FormData();
-    formData.append("token", localStorage.getItem("token"));
     if (mainData.length > 2) {
       let temp = [];
       let temp1 = [];
@@ -195,8 +194,14 @@ const AdminComponent = () => {
         },
       ],
     };
-    res = await axios.post("http://172.17.19.26:5000/getallemp", formData);
-    res1 = await axios.post("http://172.17.19.26:5000/totalemp", formData);
+    let formData1 = new FormData();
+    formData1.append("token", localStorage.getItem("token"));
+    try {
+      res = await axios.post(URI + "getallemp", formData1);
+      res1 = await axios.post(URI + "totalemp", formData1);
+    } catch (error) {
+      console.log(error);
+    }
 
     setMainData(res.data);
     setTotalEmp(parseInt(res1.data[0].total));
@@ -209,7 +214,9 @@ const AdminComponent = () => {
         },
       ],
     };
-    res = await axios.post("http://172.17.19.26:5000/getalldept", formData);
+    let formData1 = new FormData();
+    formData1.append("token", localStorage.getItem("token"));
+    res = await axios.post(URI + "getalldept", formData1);
 
     setDept(res.data[0].dept);
 
@@ -317,8 +324,8 @@ const AdminComponent = () => {
         },
       };
       try {
-        res = await axios.post("http://172.17.19.26:5000/regrade", formData1);
-        res = await axios.post("http://172.17.19.26:5000/addtotal", formData2);
+        res = await axios.post(URI + "regrade", formData1);
+        res = await axios.post(URI + "addtotal", formData2);
         fetchData();
         fetchData1();
         setLoading(false);
@@ -385,17 +392,11 @@ const AdminComponent = () => {
       formData3.append("token", localStorage.getItem("token"));
       try {
         if (nuid) {
-          res1 = await axios.post(
-            "http://172.17.19.26:5000/makeemp",
-            formData2
-          );
-          res1 = await axios.post(
-            "http://172.17.19.26:5000/addtotal",
-            formData3
-          );
+          res1 = await axios.post(URI + "makeemp", formData2);
+          res1 = await axios.post(URI + "addtotal", formData3);
         }
 
-        res = await axios.post("http://172.17.19.26:5000/regrade", formData1);
+        res = await axios.post(URI + "regrade", formData1);
         fetchData();
         fetchData1();
         setLoading(false);
@@ -426,8 +427,8 @@ const AdminComponent = () => {
       },
     };
     try {
-      res = await axios.post("http://172.17.19.26:5000/register", formData1);
-      res = await axios.post("http://172.17.19.26:5000/addtotal", formData2);
+      res = await axios.post(URI + "register", formData1);
+      res = await axios.post(URI + "addtotal", formData2);
       fetchData();
       fetchData1();
       setLoading(false);
@@ -448,7 +449,7 @@ const AdminComponent = () => {
       let res = {
         data: "",
       };
-      res = await axios.post("http://172.17.19.26:5000/deleteemp", formData);
+      res = await axios.post(URI + "deleteemp", formData);
       // if (res.data == "Success") {
       //   setAlert(true);
       // }
@@ -473,7 +474,7 @@ const AdminComponent = () => {
     dept1.append("token", localStorage.getItem("token"));
 
     try {
-      let res = await axios.post("http://172.17.19.26:5000/adddept", dept1);
+      let res = await axios.post(URI + "adddept", dept1);
 
       setLoading(false);
       fetchData();

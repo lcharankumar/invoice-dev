@@ -7,6 +7,7 @@ import { DarkModeContext } from "../../context/darkModeContext";
 import { useContext } from "react";
 import { ArabicContext } from "../../context/arabicContext";
 import "../../style/dark.scss";
+import URI from "../utils/requests";
 const AccempComponent = (props) => {
   const { darkMode } = useContext(DarkModeContext);
   const { dispatch } = useContext(DarkModeContext);
@@ -27,6 +28,12 @@ const AccempComponent = (props) => {
     discount: "",
     barcode: "",
     category: "",
+    custom: [
+      {
+        label: "",
+        value: "",
+      },
+    ],
     logo: "",
     bill_of_materials: [
       {
@@ -41,6 +48,7 @@ const AccempComponent = (props) => {
   useEffect(() => {
     if (props.finalData) {
       setData(props.finalData);
+      console.log(props.finalData);
     }
   }, [props.finalData]);
   const add = (text) => {
@@ -68,6 +76,23 @@ const AccempComponent = (props) => {
         })}
       </>
     );
+  };
+  const cust = () => {
+    return data.custom.map((data, index) => {
+      console.log(data);
+      const { label, value } = data;
+      return (
+        <div
+          style={{
+            flexBasis: "30%",
+            marginBottom: "20px",
+          }}
+        >
+          <strong>{arabic ? "من العنوان" : label}</strong> <br />
+          {value}
+        </div>
+      );
+    });
   };
   return (
     <div className="Page3">
@@ -194,6 +219,20 @@ const AccempComponent = (props) => {
                       <br />
                       {add(data.to_address)}
                     </div>
+                  </div>
+                </div>
+                <div class="payment-details">
+                  <div
+                    class="row"
+                    style={{
+                      display: "flex",
+                      flexWrap: "wrap",
+                      flexDirection: "row",
+                      borderTop: "none",
+                      justifyContent: "center",
+                    }}
+                  >
+                    {data.custom && cust()}
                   </div>
                 </div>
 

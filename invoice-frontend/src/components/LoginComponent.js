@@ -4,6 +4,7 @@ import "../style/login.css";
 import logo from "../img/logo.png";
 import axios, * as others from "axios";
 import jwt_decode from "jwt-decode";
+import URI from "./utils/requests";
 const LoginComponent = (props) => {
   const navigate = useNavigate();
 
@@ -28,7 +29,7 @@ const LoginComponent = (props) => {
         token: "",
       },
     };
-    res = await axios.post("http://172.17.19.26:5000/login", formData1);
+    res = await axios.post(URI + "login", formData1);
     if (res.data.message == "Success") {
       props.setLogin(true);
       let decoded = {

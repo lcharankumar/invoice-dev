@@ -10,6 +10,7 @@ import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
 import axios, * as others from "axios";
 import Alert from "react-bootstrap/Alert";
+import URI from "../utils/requests";
 
 const ProfileComponent = () => {
   const { darkMode } = useContext(DarkModeContext);
@@ -57,7 +58,7 @@ const ProfileComponent = () => {
       let res = {
         data: "",
       };
-      res = await axios.post("http://127.0.0.1:5000/api/profile", formData1);
+      res = await axios.post(URI + "profile", formData1);
       if (res.data == "Success") {
         setAlert(true);
       }
@@ -124,7 +125,7 @@ const ProfileComponent = () => {
       const formData1 = new FormData();
       formData1.append("uid", localStorage.getItem("uid"));
       formData1.append("token", localStorage.getItem("token"));
-      res = await axios.post("http://127.0.0.1:5000/api/getprofile", formData1);
+      res = await axios.post(URI + "getprofile", formData1);
       const formData2 = new FormData();
       formData2.append("token", localStorage.getItem("token"));
       let res1 = {
@@ -137,7 +138,7 @@ const ProfileComponent = () => {
           },
         ],
       };
-      res1 = await axios.post("http://127.0.0.1:5000/api/getallemp", formData2);
+      res1 = await axios.post(URI + "getallemp", formData2);
       let tempemp1 = [];
       res1.data.map((itms, index) => {
         if (
