@@ -16,6 +16,7 @@ const Page3Component = (props) => {
   useEffect(() => {
     const fetchReq = async () => {
       const formData2 = new FormData();
+
       formData2.append("token", localStorage.getItem("token"));
       let res1 = {
         data: [
@@ -184,11 +185,13 @@ const Page3Component = (props) => {
       }
       formData1.append("l3", "no");
       formData1.append("data", JSON.stringify(data1));
+
       formData1.append("token", localStorage.getItem("token"));
       let res;
       let res1;
       const formData2 = new FormData();
       formData2.append("total", totalreq + 1);
+
       formData2.append("token", localStorage.getItem("token"));
       try {
         res = await axios.post(URI + "request", formData1);
@@ -390,7 +393,6 @@ const Page3Component = (props) => {
                       flexDirection: "row",
                       borderTop: "none",
                       justifyContent: "center",
-                      marginBottom:"20px"
                     }}
                   >
                     {data.custom && cust()}

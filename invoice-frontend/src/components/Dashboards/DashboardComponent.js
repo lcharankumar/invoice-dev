@@ -35,7 +35,7 @@ const DashboardComponent = (props) => {
   const { arabic } = useContext(ArabicContext);
   const { dispatch } = useContext(DarkModeContext);
   const { dispatch1 } = useContext(ArabicContext);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [dailyCurr, setDailyCurr] = useState({
     rates: {
       EUR: 1.06,
@@ -252,7 +252,10 @@ const DashboardComponent = (props) => {
 
   useEffect(() => {
     props.setFinalSubmit(false);
+
     async function fetchData() {
+      console.log("LoA");
+      setLoading(true);
       let res = {
         data: [
           {
@@ -454,7 +457,7 @@ const DashboardComponent = (props) => {
           setCurr(temp.currency);
         }
       });
-      setMainData(res.data);
+      setMainData(res.data.reverse());
       setTotal((acctot + rejtot + pentot).toFixed(2));
       setaccTotal(acctot.toFixed(2));
       setrejTotal(rejtot.toFixed(2));
@@ -468,6 +471,7 @@ const DashboardComponent = (props) => {
 
     fetchData();
   }, [props.finalSubmit]);
+
   var date = new Date();
   var hours = date.getHours();
   var minutes = date.getMinutes();
@@ -673,9 +677,7 @@ const DashboardComponent = (props) => {
                   }}
                 />
               )}
-              <div class="logo1">
-                <img class="logoimg" src={darkMode ? logo1 : logo} />
-              </div>
+              <div class="logo1" style={{ height: "80px" }}></div>
 
               <div class="user-info">
                 {(localStorage.getItem("role") == "Associate Practice Lead" ||
@@ -899,7 +901,10 @@ const DashboardComponent = (props) => {
                     <div class="blob"></div>
                     <div class="blob"></div>
                   </div>
-                  <div class="account-name">{localStorage.getItem("name")}</div>
+                  <div class="account-name">
+                    {" "}
+                    {localStorage.getItem("name")}
+                  </div>
                   <div class="account-title">
                     {localStorage.getItem("role")}
                   </div>

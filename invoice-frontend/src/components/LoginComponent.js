@@ -55,7 +55,8 @@ const LoginComponent = (props) => {
     } else {
       window.alert("Invalid Credentials");
     }
-    // props.setLogin(true);
+    props.setLogin(true);
+    props.setFlag(true);
   };
   return (
     <>

@@ -231,6 +231,7 @@ const Page2Component = (props) => {
     const formData1 = new FormData();
     formData1.append("file_input", props.file);
     formData1.append("lang_input", props.lang);
+
     formData1.append("token", localStorage.getItem("token"));
 
     let res = {
@@ -261,7 +262,7 @@ const Page2Component = (props) => {
       },
     };
     //res.data = TestData2;
-    console.log(res.data.custom);
+    //console.log(res.data.custom);
     try {
       res = await axios.post(URI + "predict", formData1);
     } catch (error) {
@@ -315,6 +316,7 @@ const Page2Component = (props) => {
     const formData2 = new FormData();
     formData2.append("file_input", imageFile1);
     formData2.append("label_input", label1[edit]);
+
     formData2.append("token", localStorage.getItem("token"));
     formData2.append("lang_input", props.lang);
 
@@ -559,6 +561,7 @@ const Page2Component = (props) => {
     const formData2 = new FormData();
     formData2.append("file_input", imageFile1);
     formData2.append("label_input", label1[0]);
+
     formData2.append("token", localStorage.getItem("token"));
     formData2.append("lang_input", props.lang);
 

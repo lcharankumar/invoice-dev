@@ -43,6 +43,7 @@ function App() {
   const [finalSubmit, setFinalSubmit] = useState(false);
   const fetch = async () => {
     const formData1 = new FormData();
+
     formData1.append("token", localStorage.getItem("token"));
     let res = { data: "" };
     res = await axios.post(URI + "token", formData1);
@@ -58,15 +59,18 @@ function App() {
         decoded = jwt_decode(localStorage.getItem("token"));
       } catch (error) {
         console.log(error);
-
+        localStorage.clear();
         window.location.reload();
       }
       console.log(decoded);
       localStorage.setItem("name", decoded.name);
       localStorage.setItem("role", decoded.role);
       localStorage.setItem("uid", decoded.uid);
+      localStorage.setItem("dept", decoded.dept);
+
       localStorage.setItem("token", localStorage.getItem("token"));
       setLoading(false);
+      setFlag(true);
       //navigate("/dashboard");
     } else {
       localStorage.removeItem("token");
@@ -92,6 +96,15 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<HomeComponent></HomeComponent>} />
+            <Route
+              path="/login"
+              element={
+                <LoginComponent
+                  setFlag={setFlag}
+                  setLogin={setLogin}
+                ></LoginComponent>
+              }
+            />
             <Route
               path="*"
               exact

@@ -52,6 +52,7 @@ const ProfileComponent = () => {
     formData1.append("state", formData.state);
     formData1.append("linkedin", formData.linkedin);
     formData1.append("img", formData.img);
+
     formData1.append("token", localStorage.getItem("token"));
     event.preventDefault();
     try {
@@ -124,6 +125,7 @@ const ProfileComponent = () => {
       };
       const formData1 = new FormData();
       formData1.append("uid", localStorage.getItem("uid"));
+
       formData1.append("token", localStorage.getItem("token"));
       res = await axios.post(URI + "getprofile", formData1);
       const formData2 = new FormData();

@@ -4,7 +4,7 @@ const HomeComponent = () => {
   return (
     <>
       <div className="Main">
-        <Link to="invoice">
+        <Link to="login">
           <button className="Homebtn">
             {" "}
             <span> Get Started </span>
